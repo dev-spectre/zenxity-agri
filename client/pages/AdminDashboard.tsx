@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
-  Leaf,
   LogOut,
   LayoutDashboard,
   Clipboard,
@@ -97,7 +96,11 @@ export default function AdminDashboard() {
     },
   ]);
 
-  const [newOffer, setNewOffer] = useState({ title: "", description: "", validity: "" });
+  const [newOffer, setNewOffer] = useState({
+    title: "",
+    description: "",
+    validity: "",
+  });
   const [showAddOfferForm, setShowAddOfferForm] = useState(false);
   const [uploadData, setUploadData] = useState({
     requestId: "",
@@ -110,8 +113,8 @@ export default function AdminDashboard() {
       requests.map((req) =>
         req.id === id
           ? { ...req, status: action === "accept" ? "accepted" : "rejected" }
-          : req
-      )
+          : req,
+      ),
     );
   };
 
@@ -174,9 +177,14 @@ export default function AdminDashboard() {
         <div className="sticky top-0">
           {/* Logo */}
           <div className="h-16 flex items-center border-b border-border px-6">
-            <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition">
-              <Leaf className="w-8 h-8 text-primary" />
-              <span className="font-bold text-primary hidden md:inline">Zenxity</span>
+            <Link
+              to="/"
+              className="flex items-center gap-2 hover:opacity-80 transition"
+            >
+              <img src="/logo.jpg" alt="" className="w-8 h-8" />
+              <span className="font-bold text-primary hidden md:inline">
+                Zenxity
+              </span>
             </Link>
           </div>
 
@@ -195,7 +203,9 @@ export default function AdminDashboard() {
                   }`}
                 >
                   <Icon className="w-5 h-5" />
-                  <span className="font-medium hidden md:inline">{item.label}</span>
+                  <span className="font-medium hidden md:inline">
+                    {item.label}
+                  </span>
                 </button>
               );
             })}
@@ -204,7 +214,10 @@ export default function AdminDashboard() {
           {/* Logout */}
           <div className="border-t border-border p-4">
             <Link to="/" className="w-full">
-              <Button variant="ghost" className="w-full justify-start gap-2 text-red-600 hover:bg-red-50">
+              <Button
+                variant="ghost"
+                className="w-full justify-start gap-2 text-red-600 hover:bg-red-50"
+              >
                 <LogOut className="w-5 h-5" />
                 <span className="hidden md:inline">Logout</span>
               </Button>
@@ -218,7 +231,9 @@ export default function AdminDashboard() {
         {/* Top Bar */}
         <nav className="bg-white border-b border-border sticky top-0 z-40">
           <div className="px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-            <h1 className="text-2xl font-bold text-foreground">Admin Dashboard</h1>
+            <h1 className="text-2xl font-bold text-foreground">
+              Admin Dashboard
+            </h1>
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -246,65 +261,105 @@ export default function AdminDashboard() {
           {/* Dashboard Overview */}
           {activeSection === "dashboard" && (
             <div className="space-y-6">
-              <h2 className="text-2xl font-bold text-foreground">Dashboard Overview</h2>
+              <h2 className="text-2xl font-bold text-foreground">
+                Dashboard Overview
+              </h2>
 
               {/* Stats Cards */}
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <div className="bg-white rounded-lg border border-border p-6">
                   <div className="flex items-center justify-between mb-2">
-                    <h3 className="text-muted-foreground text-sm font-medium">Total Requests</h3>
+                    <h3 className="text-muted-foreground text-sm font-medium">
+                      Total Requests
+                    </h3>
                     <Clipboard className="w-5 h-5 text-primary" />
                   </div>
-                  <p className="text-3xl font-bold text-foreground">{requests.length}</p>
+                  <p className="text-3xl font-bold text-foreground">
+                    {requests.length}
+                  </p>
                 </div>
 
                 <div className="bg-white rounded-lg border border-border p-6">
                   <div className="flex items-center justify-between mb-2">
-                    <h3 className="text-muted-foreground text-sm font-medium">Pending</h3>
+                    <h3 className="text-muted-foreground text-sm font-medium">
+                      Pending
+                    </h3>
                     <Clock className="w-5 h-5 text-yellow-600" />
                   </div>
-                  <p className="text-3xl font-bold text-yellow-600">{pendingRequests.length}</p>
+                  <p className="text-3xl font-bold text-yellow-600">
+                    {pendingRequests.length}
+                  </p>
                 </div>
 
                 <div className="bg-white rounded-lg border border-border p-6">
                   <div className="flex items-center justify-between mb-2">
-                    <h3 className="text-muted-foreground text-sm font-medium">Accepted</h3>
+                    <h3 className="text-muted-foreground text-sm font-medium">
+                      Accepted
+                    </h3>
                     <CheckCircle className="w-5 h-5 text-green-600" />
                   </div>
-                  <p className="text-3xl font-bold text-green-600">{acceptedRequests.length}</p>
+                  <p className="text-3xl font-bold text-green-600">
+                    {acceptedRequests.length}
+                  </p>
                 </div>
 
                 <div className="bg-white rounded-lg border border-border p-6">
                   <div className="flex items-center justify-between mb-2">
-                    <h3 className="text-muted-foreground text-sm font-medium">Active Offers</h3>
+                    <h3 className="text-muted-foreground text-sm font-medium">
+                      Active Offers
+                    </h3>
                     <Megaphone className="w-5 h-5 text-primary" />
                   </div>
-                  <p className="text-3xl font-bold text-foreground">{offers.length}</p>
+                  <p className="text-3xl font-bold text-foreground">
+                    {offers.length}
+                  </p>
                 </div>
               </div>
 
               {/* Recent Requests */}
               <div className="bg-white rounded-lg border border-border p-6">
-                <h3 className="text-xl font-bold text-foreground mb-4">Recent Requests</h3>
+                <h3 className="text-xl font-bold text-foreground mb-4">
+                  Recent Requests
+                </h3>
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm">
                     <thead className="border-b border-border">
                       <tr>
-                        <th className="text-left py-3 px-2 text-muted-foreground font-semibold">User</th>
-                        <th className="text-left py-3 px-2 text-muted-foreground font-semibold">Duration</th>
-                        <th className="text-left py-3 px-2 text-muted-foreground font-semibold">Budget</th>
-                        <th className="text-left py-3 px-2 text-muted-foreground font-semibold">Status</th>
+                        <th className="text-left py-3 px-2 text-muted-foreground font-semibold">
+                          User
+                        </th>
+                        <th className="text-left py-3 px-2 text-muted-foreground font-semibold">
+                          Duration
+                        </th>
+                        <th className="text-left py-3 px-2 text-muted-foreground font-semibold">
+                          Budget
+                        </th>
+                        <th className="text-left py-3 px-2 text-muted-foreground font-semibold">
+                          Status
+                        </th>
                       </tr>
                     </thead>
                     <tbody>
                       {requests.slice(0, 5).map((req) => (
-                        <tr key={req.id} className="border-b border-border hover:bg-gray-50">
-                          <td className="py-3 px-2 text-foreground">{req.userName}</td>
-                          <td className="py-3 px-2 text-muted-foreground">{req.duration} days</td>
-                          <td className="py-3 px-2 text-foreground font-medium">₹{req.budget.toLocaleString()}</td>
+                        <tr
+                          key={req.id}
+                          className="border-b border-border hover:bg-gray-50"
+                        >
+                          <td className="py-3 px-2 text-foreground">
+                            {req.userName}
+                          </td>
+                          <td className="py-3 px-2 text-muted-foreground">
+                            {req.duration} days
+                          </td>
+                          <td className="py-3 px-2 text-foreground font-medium">
+                            ₹{req.budget.toLocaleString()}
+                          </td>
                           <td className="py-3 px-2">
-                            <span className={`px-3 py-1 rounded-full border text-xs font-semibold ${getStatusColor(req.status)}`}>
-                              {req.status.charAt(0).toUpperCase() + req.status.slice(1)}
+                            <span
+                              className={`px-3 py-1 rounded-full border text-xs font-semibold ${getStatusColor(req.status)}`}
+                            >
+                              {req.status.charAt(0).toUpperCase() +
+                                req.status.slice(1)}
                             </span>
                           </td>
                         </tr>
@@ -319,29 +374,53 @@ export default function AdminDashboard() {
           {/* Farming Requests Management */}
           {activeSection === "requests" && (
             <div className="space-y-6">
-              <h2 className="text-2xl font-bold text-foreground">Farming Requests Management</h2>
+              <h2 className="text-2xl font-bold text-foreground">
+                Farming Requests Management
+              </h2>
 
               <div className="bg-white rounded-lg border border-border overflow-hidden">
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm">
                     <thead className="bg-secondary border-b border-border">
                       <tr>
-                        <th className="text-left py-4 px-6 text-foreground font-semibold">User</th>
-                        <th className="text-left py-4 px-6 text-foreground font-semibold">Duration</th>
-                        <th className="text-left py-4 px-6 text-foreground font-semibold">Budget</th>
-                        <th className="text-left py-4 px-6 text-foreground font-semibold">Status</th>
-                        <th className="text-left py-4 px-6 text-foreground font-semibold">Action</th>
+                        <th className="text-left py-4 px-6 text-foreground font-semibold">
+                          User
+                        </th>
+                        <th className="text-left py-4 px-6 text-foreground font-semibold">
+                          Duration
+                        </th>
+                        <th className="text-left py-4 px-6 text-foreground font-semibold">
+                          Budget
+                        </th>
+                        <th className="text-left py-4 px-6 text-foreground font-semibold">
+                          Status
+                        </th>
+                        <th className="text-left py-4 px-6 text-foreground font-semibold">
+                          Action
+                        </th>
                       </tr>
                     </thead>
                     <tbody>
                       {requests.map((req) => (
-                        <tr key={req.id} className="border-b border-border hover:bg-gray-50">
-                          <td className="py-4 px-6 text-foreground font-medium">{req.userName}</td>
-                          <td className="py-4 px-6 text-muted-foreground">{req.duration} days</td>
-                          <td className="py-4 px-6 text-foreground">₹{req.budget.toLocaleString()}</td>
+                        <tr
+                          key={req.id}
+                          className="border-b border-border hover:bg-gray-50"
+                        >
+                          <td className="py-4 px-6 text-foreground font-medium">
+                            {req.userName}
+                          </td>
+                          <td className="py-4 px-6 text-muted-foreground">
+                            {req.duration} days
+                          </td>
+                          <td className="py-4 px-6 text-foreground">
+                            ₹{req.budget.toLocaleString()}
+                          </td>
                           <td className="py-4 px-6">
-                            <span className={`px-3 py-1 rounded-full border text-xs font-semibold ${getStatusColor(req.status)}`}>
-                              {req.status.charAt(0).toUpperCase() + req.status.slice(1)}
+                            <span
+                              className={`px-3 py-1 rounded-full border text-xs font-semibold ${getStatusColor(req.status)}`}
+                            >
+                              {req.status.charAt(0).toUpperCase() +
+                                req.status.slice(1)}
                             </span>
                           </td>
                           <td className="py-4 px-6">
@@ -350,7 +429,9 @@ export default function AdminDashboard() {
                                 <Button
                                   size="sm"
                                   className="bg-green-600 hover:bg-green-700 text-white"
-                                  onClick={() => handleRequestAction(req.id, "accept")}
+                                  onClick={() =>
+                                    handleRequestAction(req.id, "accept")
+                                  }
                                 >
                                   <CheckCircle className="w-4 h-4 mr-1" />
                                   Accept
@@ -358,7 +439,9 @@ export default function AdminDashboard() {
                                 <Button
                                   size="sm"
                                   variant="destructive"
-                                  onClick={() => handleRequestAction(req.id, "reject")}
+                                  onClick={() =>
+                                    handleRequestAction(req.id, "reject")
+                                  }
                                 >
                                   <XCircle className="w-4 h-4 mr-1" />
                                   Reject
@@ -367,7 +450,9 @@ export default function AdminDashboard() {
                             )}
                             {req.status !== "pending" && (
                               <span className="text-muted-foreground text-xs">
-                                {req.status === "accepted" ? "Accepted" : "Rejected"}
+                                {req.status === "accepted"
+                                  ? "Accepted"
+                                  : "Rejected"}
                               </span>
                             )}
                           </td>
@@ -383,7 +468,9 @@ export default function AdminDashboard() {
           {/* Upload Farming Updates */}
           {activeSection === "uploads" && (
             <div className="space-y-6">
-              <h2 className="text-2xl font-bold text-foreground">Upload Farming Updates</h2>
+              <h2 className="text-2xl font-bold text-foreground">
+                Upload Farming Updates
+              </h2>
               <div className="bg-white rounded-lg border border-border p-8">
                 <p className="text-muted-foreground mb-6">
                   Upload updates for accepted requests
@@ -397,7 +484,10 @@ export default function AdminDashboard() {
                       <select
                         value={uploadData.requestId}
                         onChange={(e) =>
-                          setUploadData({ ...uploadData, requestId: e.target.value })
+                          setUploadData({
+                            ...uploadData,
+                            requestId: e.target.value,
+                          })
                         }
                         className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                         required
@@ -420,7 +510,9 @@ export default function AdminDashboard() {
                           type="file"
                           multiple
                           accept="image/*,video/*"
-                          onChange={(e) => setSelectedFiles(Array.from(e.target.files || []))}
+                          onChange={(e) =>
+                            setSelectedFiles(Array.from(e.target.files || []))
+                          }
                           className="hidden"
                           id="file-upload"
                         />
@@ -458,13 +550,20 @@ export default function AdminDashboard() {
                         rows={4}
                         value={uploadData.caption}
                         onChange={(e) =>
-                          setUploadData({ ...uploadData, caption: e.target.value })
+                          setUploadData({
+                            ...uploadData,
+                            caption: e.target.value,
+                          })
                         }
                         required
                       />
                     </div>
 
-                    <Button type="submit" size="lg" className="w-full md:w-auto">
+                    <Button
+                      type="submit"
+                      size="lg"
+                      className="w-full md:w-auto"
+                    >
                       <Upload className="w-4 h-4 mr-2" />
                       Upload Update
                     </Button>
@@ -472,7 +571,8 @@ export default function AdminDashboard() {
                 ) : (
                   <div className="text-center py-8">
                     <p className="text-muted-foreground">
-                      No accepted requests available. Accept requests first to upload updates.
+                      No accepted requests available. Accept requests first to
+                      upload updates.
                     </p>
                   </div>
                 )}
@@ -484,7 +584,9 @@ export default function AdminDashboard() {
           {activeSection === "offers" && (
             <div className="space-y-6">
               <div className="flex items-center justify-between">
-                <h2 className="text-2xl font-bold text-foreground">Offers Management</h2>
+                <h2 className="text-2xl font-bold text-foreground">
+                  Offers Management
+                </h2>
                 <Button
                   onClick={() => setShowAddOfferForm(!showAddOfferForm)}
                   className="gap-2"
@@ -496,7 +598,9 @@ export default function AdminDashboard() {
 
               {showAddOfferForm && (
                 <div className="bg-white rounded-lg border border-border p-8">
-                  <h3 className="text-lg font-bold text-foreground mb-6">Create New Offer</h3>
+                  <h3 className="text-lg font-bold text-foreground mb-6">
+                    Create New Offer
+                  </h3>
                   <form onSubmit={handleAddOffer} className="space-y-4">
                     <div>
                       <Label className="text-foreground font-semibold mb-2">
@@ -523,7 +627,10 @@ export default function AdminDashboard() {
                         rows={3}
                         value={newOffer.description}
                         onChange={(e) =>
-                          setNewOffer({ ...newOffer, description: e.target.value })
+                          setNewOffer({
+                            ...newOffer,
+                            description: e.target.value,
+                          })
                         }
                         required
                       />
@@ -550,7 +657,11 @@ export default function AdminDashboard() {
                         variant="outline"
                         onClick={() => {
                           setShowAddOfferForm(false);
-                          setNewOffer({ title: "", description: "", validity: "" });
+                          setNewOffer({
+                            title: "",
+                            description: "",
+                            validity: "",
+                          });
                         }}
                       >
                         Cancel
@@ -571,7 +682,9 @@ export default function AdminDashboard() {
                         <h3 className="text-xl font-bold text-primary mb-2">
                           {offer.title}
                         </h3>
-                        <p className="text-muted-foreground mb-3">{offer.description}</p>
+                        <p className="text-muted-foreground mb-3">
+                          {offer.description}
+                        </p>
                         <p className="text-xs font-semibold text-green-700 bg-green-50 px-3 py-1 rounded-full w-fit">
                           {offer.validity}
                         </p>

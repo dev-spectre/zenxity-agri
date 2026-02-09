@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Leaf, Mail, Lock, AlertCircle } from "lucide-react";
+import { Mail, Lock, AlertCircle } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
 export default function AdminLogin() {
@@ -26,8 +26,11 @@ export default function AdminLogin() {
     <div className="min-h-screen bg-gradient-to-br from-secondary via-white to-white flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-md">
         {/* Header */}
-        <Link to="/" className="flex items-center gap-2 mb-8 justify-center hover:opacity-80 transition">
-          <Leaf className="w-8 h-8 text-primary" />
+        <Link
+          to="/"
+          className="flex items-center gap-2 mb-8 justify-center hover:opacity-80 transition"
+        >
+          <img src="/logo.jpg" alt="" className="w-8 h-8" />
           <span className="text-2xl font-bold text-primary">Zenxity</span>
         </Link>
 
@@ -44,7 +47,8 @@ export default function AdminLogin() {
           <Alert className="mb-6 bg-blue-50 border-blue-200">
             <Lock className="h-4 w-4 text-blue-600" />
             <AlertDescription className="text-blue-800">
-              This is a secure admin portal. Only authorized administrators can access.
+              This is a secure admin portal. Only authorized administrators can
+              access.
             </AlertDescription>
           </Alert>
 
@@ -85,18 +89,16 @@ export default function AdminLogin() {
               </div>
             </div>
 
-            <Button
-              type="submit"
-              className="w-full mt-6"
-              disabled={loading}
-            >
+            <Button type="submit" className="w-full mt-6" disabled={loading}>
               {loading ? "Signing in..." : "Admin Sign In"}
             </Button>
           </form>
 
           {/* User Login Link */}
           <div className="mt-8 pt-6 border-t border-border text-center">
-            <p className="text-muted-foreground text-sm mb-2">Are you a user?</p>
+            <p className="text-muted-foreground text-sm mb-2">
+              Are you a user?
+            </p>
             <Link to="/user-login">
               <Button variant="outline" className="w-full">
                 User Login
@@ -107,7 +109,10 @@ export default function AdminLogin() {
 
         {/* Back to Home */}
         <div className="text-center mt-6">
-          <Link to="/" className="text-muted-foreground hover:text-primary transition">
+          <Link
+            to="/"
+            className="text-muted-foreground hover:text-primary transition"
+          >
             ← Back to Home
           </Link>
         </div>

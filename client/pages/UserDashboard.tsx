@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
-  Leaf,
   LogOut,
   ChevronDown,
   User,
@@ -116,21 +115,24 @@ export default function UserDashboard() {
       type: "photo",
       date: "2024-02-10",
       caption: "Land preparation completed successfully",
-      thumbnail: "https://images.unsplash.com/photo-1574943320219-553eb213f72d?w=300&h=200&fit=crop",
+      thumbnail:
+        "https://images.unsplash.com/photo-1574943320219-553eb213f72d?w=300&h=200&fit=crop",
     },
     {
       id: "2",
       type: "video",
       date: "2024-02-12",
       caption: "Seeding process in progress",
-      thumbnail: "https://images.unsplash.com/photo-1595421683101-2870a65eb776?w=300&h=200&fit=crop",
+      thumbnail:
+        "https://images.unsplash.com/photo-1595421683101-2870a65eb776?w=300&h=200&fit=crop",
     },
     {
       id: "3",
       type: "photo",
       date: "2024-02-14",
       caption: "Crops growing well",
-      thumbnail: "https://images.unsplash.com/photo-1500595046891-9f3e8eda2ba6?w=300&h=200&fit=crop",
+      thumbnail:
+        "https://images.unsplash.com/photo-1500595046891-9f3e8eda2ba6?w=300&h=200&fit=crop",
     },
   ];
 
@@ -173,8 +175,11 @@ export default function UserDashboard() {
       {/* Top Navigation Bar */}
       <nav className="bg-white border-b border-border sticky top-0 z-50 shadow-sm">
         <div className="px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition">
-            <Leaf className="w-8 h-8 text-primary" />
+          <Link
+            to="/"
+            className="flex items-center gap-2 hover:opacity-80 transition"
+          >
+            <img src="/logo.jpg" alt="" className="w-8 h-8" />
             <span className="text-2xl font-bold text-primary">Zenxity</span>
           </Link>
 
@@ -222,7 +227,9 @@ export default function UserDashboard() {
           <div className="max-w-7xl mx-auto space-y-8">
             {/* Section 1: Current Offers */}
             <section>
-              <h2 className="text-2xl font-bold text-foreground mb-6">Current Offers</h2>
+              <h2 className="text-2xl font-bold text-foreground mb-6">
+                Current Offers
+              </h2>
               <div className="overflow-x-auto pb-4">
                 <div className="flex gap-6 min-w-max lg:min-w-full lg:grid lg:grid-cols-3">
                   {offers.map((offer) => (
@@ -267,7 +274,10 @@ export default function UserDashboard() {
                         <select
                           value={formData.duration}
                           onChange={(e) =>
-                            setFormData({ ...formData, duration: e.target.value })
+                            setFormData({
+                              ...formData,
+                              duration: e.target.value,
+                            })
                           }
                           className="w-full pl-10 pr-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                         >
@@ -325,7 +335,9 @@ export default function UserDashboard() {
 
             {/* Section 3: Field Status */}
             <section>
-              <h2 className="text-2xl font-bold text-foreground mb-6">Your Requests</h2>
+              <h2 className="text-2xl font-bold text-foreground mb-6">
+                Your Requests
+              </h2>
               <div className="grid gap-4">
                 {requests.map((request) => (
                   <div
@@ -355,8 +367,11 @@ export default function UserDashboard() {
                           Submitted on {request.createdDate}
                         </p>
                       </div>
-                      <div className={`px-4 py-2 rounded-full border font-semibold text-sm whitespace-nowrap ${getStatusColor(request.status)}`}>
-                        {request.status.charAt(0).toUpperCase() + request.status.slice(1)}
+                      <div
+                        className={`px-4 py-2 rounded-full border font-semibold text-sm whitespace-nowrap ${getStatusColor(request.status)}`}
+                      >
+                        {request.status.charAt(0).toUpperCase() +
+                          request.status.slice(1)}
                       </div>
                     </div>
                   </div>
@@ -398,11 +413,19 @@ export default function UserDashboard() {
                           {update.caption}
                         </p>
                         <div className="flex gap-2 mt-4">
-                          <Button size="sm" variant="outline" className="flex-1">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="flex-1"
+                          >
                             <Download className="w-4 h-4 mr-1" />
                             Download
                           </Button>
-                          <Button size="sm" variant="outline" className="flex-1">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="flex-1"
+                          >
                             <Share2 className="w-4 h-4 mr-1" />
                             Share
                           </Button>
@@ -419,11 +442,15 @@ export default function UserDashboard() {
         {/* Profile Tab */}
         <TabsContent value="profile" className="px-4 sm:px-6 lg:px-8 py-8">
           <div className="max-w-2xl mx-auto">
-            <h2 className="text-2xl font-bold text-foreground mb-6">User Profile</h2>
+            <h2 className="text-2xl font-bold text-foreground mb-6">
+              User Profile
+            </h2>
             <div className="bg-white rounded-lg border border-border p-8">
               <form onSubmit={handleUpdateProfile} className="space-y-6">
                 <div>
-                  <Label className="text-foreground font-semibold mb-2">Full Name</Label>
+                  <Label className="text-foreground font-semibold mb-2">
+                    Full Name
+                  </Label>
                   <Input
                     type="text"
                     value={profileData.name}
@@ -451,7 +478,9 @@ export default function UserDashboard() {
                 </div>
 
                 <div>
-                  <Label className="text-foreground font-semibold mb-2">Email ID</Label>
+                  <Label className="text-foreground font-semibold mb-2">
+                    Email ID
+                  </Label>
                   <Input
                     type="email"
                     value={profileData.email}
@@ -473,7 +502,10 @@ export default function UserDashboard() {
                       placeholder="••••••••"
                       value={profileData.password}
                       onChange={(e) =>
-                        setProfileData({ ...profileData, password: e.target.value })
+                        setProfileData({
+                          ...profileData,
+                          password: e.target.value,
+                        })
                       }
                     />
                   </div>

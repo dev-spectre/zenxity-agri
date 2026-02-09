@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Leaf, Mail, Lock, User, Phone } from "lucide-react";
+import { Mail, Lock, User, Phone } from "lucide-react";
 
 export default function UserLogin() {
   const [isLogin, setIsLogin] = useState(true);
@@ -38,8 +38,11 @@ export default function UserLogin() {
     <div className="min-h-screen bg-gradient-to-br from-secondary via-white to-white flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-md">
         {/* Header */}
-        <Link to="/" className="flex items-center gap-2 mb-8 justify-center hover:opacity-80 transition">
-          <Leaf className="w-8 h-8 text-primary" />
+        <Link
+          to="/"
+          className="flex items-center gap-2 mb-8 justify-center hover:opacity-80 transition"
+        >
+          <img src="/logo.jpg" alt="" className="w-8 h-8" />
           <span className="text-2xl font-bold text-primary">Zenxity</span>
         </Link>
 
@@ -93,11 +96,7 @@ export default function UserLogin() {
                 </div>
               </div>
 
-              <Button
-                type="submit"
-                className="w-full mt-6"
-                disabled={loading}
-              >
+              <Button type="submit" className="w-full mt-6" disabled={loading}>
                 {loading ? "Signing in..." : "Sign In"}
               </Button>
             </form>
@@ -176,11 +175,7 @@ export default function UserLogin() {
                 </div>
               </div>
 
-              <Button
-                type="submit"
-                className="w-full mt-6"
-                disabled={loading}
-              >
+              <Button type="submit" className="w-full mt-6" disabled={loading}>
                 {loading ? "Creating Account..." : "Create Account"}
               </Button>
             </form>
@@ -207,7 +202,9 @@ export default function UserLogin() {
 
           {/* Admin Login Link */}
           <div className="mt-8 pt-6 border-t border-border text-center">
-            <p className="text-muted-foreground text-sm mb-2">Are you an admin?</p>
+            <p className="text-muted-foreground text-sm mb-2">
+              Are you an admin?
+            </p>
             <Link to="/admin-login">
               <Button variant="outline" className="w-full">
                 Admin Login
@@ -218,7 +215,10 @@ export default function UserLogin() {
 
         {/* Back to Home */}
         <div className="text-center mt-6">
-          <Link to="/" className="text-muted-foreground hover:text-primary transition">
+          <Link
+            to="/"
+            className="text-muted-foreground hover:text-primary transition"
+          >
             ← Back to Home
           </Link>
         </div>

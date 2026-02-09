@@ -9,19 +9,12 @@ export default function Index() {
       <nav className="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur border-b border-border z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Leaf className="w-8 h-8 text-primary" />
+            <img src="/logo.jpg" alt="" className="w-8 h-8" />
             <span className="text-2xl font-bold text-primary">Zenxity</span>
           </div>
           <div className="flex gap-4">
             <Link to="/user-login">
-              <Button variant="outline" size="sm">
-                User Login
-              </Button>
-            </Link>
-            <Link to="/admin-login">
-              <Button variant="outline" size="sm">
-                Admin Login
-              </Button>
+              <Button size="sm">Login</Button>
             </Link>
           </div>
         </div>
@@ -36,7 +29,9 @@ export default function Index() {
                 Smart Contract Farming Services
               </h1>
               <p className="text-lg text-muted-foreground mb-8">
-                Book professional farming services for your land and track farming activities in real-time with live updates, photos, and videos.
+                Book professional farming services for your land and track
+                farming activities in real-time with live updates, photos, and
+                videos.
               </p>
               <div className="flex gap-4 flex-col sm:flex-row">
                 <Link to="/user-login">
@@ -45,7 +40,11 @@ export default function Index() {
                   </Button>
                 </Link>
                 <a href="#about" className="inline-block">
-                  <Button size="lg" variant="outline" className="w-full sm:w-auto">
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="w-full sm:w-auto"
+                  >
                     Learn More
                   </Button>
                 </a>
@@ -54,7 +53,9 @@ export default function Index() {
             <div className="hidden md:block">
               <div className="bg-gradient-to-br from-primary/10 to-accent/10 rounded-2xl p-12 text-center">
                 <Leaf className="w-32 h-32 text-primary mx-auto mb-4 opacity-80" />
-                <p className="text-foreground font-semibold">Transparent & Reliable Farming Services</p>
+                <p className="text-foreground font-semibold">
+                  Transparent & Reliable Farming Services
+                </p>
               </div>
             </div>
           </div>
@@ -153,14 +154,21 @@ export default function Index() {
           </h2>
           <div className="space-y-6 text-muted-foreground">
             <p className="text-lg leading-relaxed">
-              <strong className="text-foreground">Zenxity</strong> is a contract farming company dedicated to providing reliable and transparent farming services to landowners. We specialize in managing farming operations on behalf of landowners while maintaining complete transparency through live updates, ensuring trust, efficiency, and convenience.
+              <strong className="text-foreground">Zenxity</strong> is a contract
+              farming company dedicated to providing reliable and transparent
+              farming services to landowners. We specialize in managing farming
+              operations on behalf of landowners while maintaining complete
+              transparency through live updates, ensuring trust, efficiency, and
+              convenience.
             </p>
             <div>
               <h3 className="text-2xl font-bold text-foreground mb-3">
                 Our Mission
               </h3>
               <p className="text-lg leading-relaxed">
-                To provide an accessible online platform where landowners can easily book professional farming services and monitor their agricultural operations in real-time.
+                To provide an accessible online platform where landowners can
+                easily book professional farming services and monitor their
+                agricultural operations in real-time.
               </p>
             </div>
             <div>
@@ -188,7 +196,8 @@ export default function Index() {
             Meet the Founders of Zenxity
           </h2>
           <p className="text-center text-muted-foreground mb-12 max-w-2xl mx-auto">
-            Led by a passionate team dedicated to revolutionizing contract farming and empowering landowners
+            Led by a passionate team dedicated to revolutionizing contract
+            farming and empowering landowners
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10">
@@ -197,25 +206,29 @@ export default function Index() {
                 name: "Muthu Mohammed A",
                 role: "Founder & CEO",
                 bio: "Leads company vision, strategic growth, and partnerships to expand Zenxity's contract farming network.",
-                image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop",
+                image:
+                  "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop",
               },
               {
                 name: "Parthasarathi S",
                 role: "Founder & COO",
                 bio: "Oversees daily operations, farming workflow execution, and coordination between field teams and users.",
-                image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=400&fit=crop",
+                image:
+                  "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=400&fit=crop",
               },
               {
                 name: "Abishek Dallas",
                 role: "Founder & CTO",
                 bio: "Leads technology development, platform architecture, and live farming update systems.",
-                image: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&h=400&fit=crop",
+                image:
+                  "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&h=400&fit=crop",
               },
               {
                 name: "Kavyashri K P",
                 role: "Founder & CMO",
                 bio: "Handles marketing strategy, brand communication, and user outreach across digital platforms.",
-                image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop",
+                image:
+                  "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop",
               },
             ].map((founder, i) => (
               <div
@@ -253,14 +266,11 @@ export default function Index() {
             Ready to Get Started?
           </h2>
           <p className="text-lg mb-8 opacity-95">
-            Join hundreds of landowners who trust Zenxity for their farming needs
+            Join hundreds of landowners who trust Zenxity for their farming
+            needs
           </p>
           <Link to="/user-login">
-            <Button
-              size="lg"
-              variant="secondary"
-              className="px-8"
-            >
+            <Button size="lg" variant="secondary" className="px-8">
               Create Your Account Today
             </Button>
           </Link>
@@ -273,7 +283,7 @@ export default function Index() {
           <div className="grid md:grid-cols-4 gap-8 mb-8">
             <div>
               <div className="flex items-center gap-2 mb-4">
-                <Leaf className="w-6 h-6" />
+            <img src="/logo.jpg" alt="" className="w-8 h-8" />
                 <span className="text-xl font-bold">Zenxity</span>
               </div>
               <p className="text-white/70">Smart contract farming services</p>
@@ -281,9 +291,21 @@ export default function Index() {
             <div>
               <h4 className="font-semibold mb-4">Quick Links</h4>
               <ul className="space-y-2 text-white/70">
-                <li><a href="#about" className="hover:text-white">About Us</a></li>
-                <li><Link to="/user-login" className="hover:text-white">User Login</Link></li>
-                <li><Link to="/admin-login" className="hover:text-white">Admin Login</Link></li>
+                <li>
+                  <a href="#about" className="hover:text-white">
+                    About Us
+                  </a>
+                </li>
+                <li>
+                  <Link to="/user-login" className="hover:text-white">
+                    User Login
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/admin-login" className="hover:text-white">
+                    Admin Login
+                  </Link>
+                </li>
               </ul>
             </div>
             <div>
