@@ -9,8 +9,8 @@ export default function Index() {
       <nav className="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur border-b border-border z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <img src="/logo.jpg" alt="" className="w-8 h-8" />
-            <span className="text-2xl font-bold text-primary">Zenxity</span>
+            <img src="/logo-transparent.png" alt="" className="w-10 h-10" />
+            <span className="text-3xl font-bold text-primary">Zenxity</span>
           </div>
           <div className="flex gap-4">
             <Link to="/user-login">
@@ -51,9 +51,9 @@ export default function Index() {
               </div>
             </div>
             <div className="hidden md:block">
-              <div className="bg-gradient-to-br from-primary/10 to-accent/10 rounded-2xl p-12 text-center">
-                <Leaf className="w-32 h-32 text-primary mx-auto mb-4 opacity-80" />
-                <p className="text-foreground font-semibold">
+              <div className=" rounded-2xl overflow-hidden relative text-center">
+                <img src="/hero.jpg" alt="" className="" />
+                <p className="text-white font-semibold absolute left-0 right-0 text-center bottom-0 bg-gradient-to-b from-transparent to-black/70 py-2">
                   Transparent & Reliable Farming Services
                 </p>
               </div>
@@ -99,47 +99,6 @@ export default function Index() {
                   {feature.title}
                 </h3>
                 <p className="text-muted-foreground">{feature.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Current Offers Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-secondary">
-        <div className="max-w-7xl mx-auto">
-          <h2 className="text-3xl sm:text-4xl font-bold mb-12 text-foreground">
-            Current Offers
-          </h2>
-          <div className="grid md:grid-cols-3 gap-8">
-            {[
-              {
-                title: "Plowing & Tilling",
-                desc: "Professional land preparation for optimal crop growth",
-                price: "Competitive Rates",
-              },
-              {
-                title: "Seeding Services",
-                desc: "Expert seeding with modern machinery for better yield",
-                price: "Custom Quotes",
-              },
-              {
-                title: "Harvesting",
-                desc: "Efficient harvesting solutions with minimal crop loss",
-                price: "Seasonal Pricing",
-              },
-            ].map((offer, i) => (
-              <div
-                key={i}
-                className="bg-white rounded-lg p-8 shadow-sm hover:shadow-md transition-shadow"
-              >
-                <h3 className="text-2xl font-bold text-primary mb-3">
-                  {offer.title}
-                </h3>
-                <p className="text-muted-foreground mb-4">{offer.desc}</p>
-                <p className="text-sm font-semibold text-accent">
-                  {offer.price}
-                </p>
               </div>
             ))}
           </div>
@@ -199,48 +158,69 @@ export default function Index() {
             Led by a passionate team dedicated to revolutionizing contract
             farming and empowering landowners
           </p>
+          <div className="bg-white rounded-xl border border-border mb-8 lg:mb-10 p-8 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
+            <div className="flex flex-col items-center text-center ">
+              <div className="w-32 h-32 rounded-full overflow-hidden mb-6 border-4 border-primary/20">
+                <img
+                  src="/partha.jpeg"
+                  alt="Parthasarathi S"
+                  className="w-full h-full object-cover object-top"
+                />
+              </div>
+              <h3 className="text-xl font-bold text-foreground mb-2">
+                Parthasarathi S
+              </h3>
+              <p className="text-primary font-semibold mb-4 text-sm">
+                Founder & CEO
+              </p>
+              <p className="text-muted-foreground text-sm leading-relaxed">
+                Oversees daily operations, farming workflow execution, and
+                coordination between field teams and users.
+              </p>
+            </div>
+          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10">
+          <div className="grid grid-cols-1 place-content-center md:grid-cols-2 gap-8 lg:gap-10">
             {[
               {
                 name: "Muthu Mohammed A",
-                role: "Founder & CEO",
+                role: "Founder & COO",
                 bio: "Leads company vision, strategic growth, and partnerships to expand Zenxity's contract farming network.",
                 image:
-                  "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop",
-              },
-              {
-                name: "Parthasarathi S",
-                role: "Founder & COO",
-                bio: "Oversees daily operations, farming workflow execution, and coordination between field teams and users.",
-                image:
-                  "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=400&fit=crop",
+                  "/muthu.jpeg",
               },
               {
                 name: "Abishek Dallas",
                 role: "Founder & CTO",
                 bio: "Leads technology development, platform architecture, and live farming update systems.",
                 image:
-                  "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&h=400&fit=crop",
+                  "/abhi.png",
               },
               {
                 name: "Kavyashri K P",
                 role: "Founder & CMO",
                 bio: "Handles marketing strategy, brand communication, and user outreach across digital platforms.",
                 image:
-                  "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop",
+                  "/kavya.png",
+              },
+              {
+                name: "Saniya S",
+                role: "Founder & CCSO",
+                bio: "Oversees customer support systems, ensures landowner satisfaction, and manages the overall customer success journey.",
+                image:
+                  "/sanya.jpeg",
               },
             ].map((founder, i) => (
               <div
                 key={i}
                 className="bg-white rounded-xl border border-border p-8 hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
               >
-                <div className="flex flex-col items-center text-center">
+                <div className="flex flex-col items-center text-center ">
                   <div className="w-32 h-32 rounded-full overflow-hidden mb-6 border-4 border-primary/20">
                     <img
                       src={founder.image}
                       alt={founder.name}
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-cover object-top"
                     />
                   </div>
                   <h3 className="text-xl font-bold text-foreground mb-2">
@@ -283,7 +263,7 @@ export default function Index() {
           <div className="grid md:grid-cols-4 gap-8 mb-8">
             <div>
               <div className="flex items-center gap-2 mb-4">
-            <img src="/logo.jpg" alt="" className="w-8 h-8" />
+                <img src="/logo-transparent.png" alt="" className="w-10 h-10" />
                 <span className="text-xl font-bold">Zenxity</span>
               </div>
               <p className="text-white/70">Smart contract farming services</p>
@@ -298,12 +278,7 @@ export default function Index() {
                 </li>
                 <li>
                   <Link to="/user-login" className="hover:text-white">
-                    User Login
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/admin-login" className="hover:text-white">
-                    Admin Login
+                    Login
                   </Link>
                 </li>
               </ul>

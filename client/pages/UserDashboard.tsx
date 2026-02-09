@@ -179,7 +179,7 @@ export default function UserDashboard() {
             to="/"
             className="flex items-center gap-2 hover:opacity-80 transition"
           >
-            <img src="/logo.jpg" alt="" className="w-8 h-8" />
+            <img src="/logo-transparent.png" alt="" className="w-10 h-10" />
             <span className="text-2xl font-bold text-primary">Zenxity</span>
           </Link>
 

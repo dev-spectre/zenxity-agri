@@ -42,7 +42,7 @@ export default function UserLogin() {
           to="/"
           className="flex items-center gap-2 mb-8 justify-center hover:opacity-80 transition"
         >
-          <img src="/logo.jpg" alt="" className="w-8 h-8" />
+          <img src="/logo-transparent.png" alt="" className="w-10 h-10" />
           <span className="text-2xl font-bold text-primary">Zenxity</span>
         </Link>
 
@@ -200,17 +200,6 @@ export default function UserLogin() {
             </p>
           </div>
 
-          {/* Admin Login Link */}
-          <div className="mt-8 pt-6 border-t border-border text-center">
-            <p className="text-muted-foreground text-sm mb-2">
-              Are you an admin?
-            </p>
-            <Link to="/admin-login">
-              <Button variant="outline" className="w-full">
-                Admin Login
-              </Button>
-            </Link>
-          </div>
         </div>
 
         {/* Back to Home */}

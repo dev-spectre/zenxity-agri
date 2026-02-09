@@ -181,7 +181,7 @@ export default function AdminDashboard() {
               to="/"
               className="flex items-center gap-2 hover:opacity-80 transition"
             >
-              <img src="/logo.jpg" alt="" className="w-8 h-8" />
+              <img src="/logo-transparent.png" alt="" className="w-10 h-10" />
               <span className="font-bold text-primary hidden md:inline">
                 Zenxity
               </span>
