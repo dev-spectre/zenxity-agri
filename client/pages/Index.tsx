@@ -181,6 +181,71 @@ export default function Index() {
         </div>
       </section>
 
+      {/* Meet the Founders Section */}
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
+        <div className="max-w-7xl mx-auto">
+          <h2 className="text-3xl sm:text-4xl font-bold text-center mb-4 text-foreground">
+            Meet the Founders of Zenxity
+          </h2>
+          <p className="text-center text-muted-foreground mb-12 max-w-2xl mx-auto">
+            Led by a passionate team dedicated to revolutionizing contract farming and empowering landowners
+          </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10">
+            {[
+              {
+                name: "Muthu Mohammed A",
+                role: "Founder & CEO",
+                bio: "Leads company vision, strategic growth, and partnerships to expand Zenxity's contract farming network.",
+                image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop",
+              },
+              {
+                name: "Parthasarathi S",
+                role: "Founder & COO",
+                bio: "Oversees daily operations, farming workflow execution, and coordination between field teams and users.",
+                image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=400&fit=crop",
+              },
+              {
+                name: "Abishek Dallas",
+                role: "Founder & CTO",
+                bio: "Leads technology development, platform architecture, and live farming update systems.",
+                image: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&h=400&fit=crop",
+              },
+              {
+                name: "Kavyashri K P",
+                role: "Founder & CMO",
+                bio: "Handles marketing strategy, brand communication, and user outreach across digital platforms.",
+                image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop",
+              },
+            ].map((founder, i) => (
+              <div
+                key={i}
+                className="bg-white rounded-xl border border-border p-8 hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
+              >
+                <div className="flex flex-col items-center text-center">
+                  <div className="w-32 h-32 rounded-full overflow-hidden mb-6 border-4 border-primary/20">
+                    <img
+                      src={founder.image}
+                      alt={founder.name}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <h3 className="text-xl font-bold text-foreground mb-2">
+                    {founder.name}
+                  </h3>
+                  <p className="text-primary font-semibold mb-4 text-sm">
+                    {founder.role}
+                  </p>
+                  <p className="text-muted-foreground text-sm leading-relaxed">
+                    {founder.bio}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* CTA Section */}
       <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-primary to-accent">
         <div className="max-w-4xl mx-auto text-center text-white">
