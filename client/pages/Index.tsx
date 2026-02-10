@@ -190,7 +190,7 @@ export default function Index() {
                   "/muthu.jpeg",
               },
               {
-                name: "Abishek Dallas",
+                name: "Abhishek Dallas",
                 role: "Founder & CTO",
                 bio: "Leads technology development, platform architecture, and live farming update systems.",
                 image:

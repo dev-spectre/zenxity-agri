@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,10 +8,7 @@ import {
   ChevronDown,
   User,
   Settings,
-  Clock,
-  MessageSquare,
   Send,
-  MapPin,
   Calendar,
   Download,
   Share2,
@@ -22,7 +19,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsList } from "@/components/ui/tabs";
 
 interface Offer {
   id: string;
@@ -55,7 +52,7 @@ interface Update {
 }
 
 export default function UserDashboard() {
-  const [userName] = useState("John Doe");
+  const [userName, setUserName] = useState("");
   const [activeTab, setActiveTab] = useState("dashboard");
   const [requests, setRequests] = useState<FarmingRequest[]>([
     {
@@ -183,6 +180,17 @@ export default function UserDashboard() {
 
   const acceptedRequest = requests.find((r) => r.status === "accepted");
 
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user") || "null");
+    const accessToken = localStorage.getItem("accessToken");
+
+    if (user && accessToken) {
+      setUserName(user.name);
+    } else {
+      window.location.href = "/login";
+    }
+  }, []);
+
   return (
     <div className="min-h-screen bg-background">
       {/* Top Navigation Bar */}
@@ -220,7 +228,9 @@ export default function UserDashboard() {
                   Settings
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link to="/">
+                  <Link onClick={() => {
+                    localStorage.clear();
+                  }} to="/">
                     <LogOut className="w-4 h-4 mr-2" />
                     Logout
                   </Link>

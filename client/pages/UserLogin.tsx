@@ -18,20 +18,57 @@ export default function UserLogin() {
     e.preventDefault();
     setLoading(true);
     // Simulate API call
-    setTimeout(() => {
-      setLoading(false);
+
+    const res = await fetch("/api/auth/signin", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email,
+        password,
+      }),
+    });
+
+    const payload = await res.json();
+    if (payload.user && payload.accessToken && payload.refreshToken) {
+      localStorage.setItem("user", JSON.stringify(payload.user));
+      localStorage.setItem("accessToken", payload.accessToken);
+      localStorage.setItem("refreshToken", payload.refreshToken);
+
       navigate("/user-dashboard");
-    }, 1000);
+    }
+
+    setLoading(false);
   };
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     // Simulate API call
-    setTimeout(() => {
-      setLoading(false);
+    const res = await fetch("/api/auth/signup", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: fullName,
+        email,
+        password,
+        mobileNumber: mobile,
+      }),
+    });
+
+    const payload = await res.json();
+    if (payload.user) {
+      localStorage.setItem("user", JSON.stringify(payload.user));
+      localStorage.setItem("accessToken", payload.accessToken);
+      localStorage.setItem("refreshToken", payload.refreshToken);
+
       navigate("/user-dashboard");
-    }, 1000);
+    }
+
+    setLoading(false);
   };
 
   return (
@@ -110,7 +147,19 @@ export default function UserLogin() {
                 <p className="text-sm w-fit text-[#1F1D39]">or</p>
                 <div className="mt-1 h-[1.5px] flex-grow rounded bg-[#1F1D3923]"></div>
               </div>
-              <button className="font-roboto flex w-full items-center justify-center gap-3 rounded-md border border-[#1f1d398f] py-3 font-medium text-[#1F1D39] hover:cursor-pointer hover:bg-black/5">
+              <button
+                onClick={async () => {
+                  const res = await fetch("/api/auth/google", {
+                    method: "GET",
+                  });
+
+                  const payload = await res.json();
+                  if (payload.url) {
+                    window.location.href = payload.url;
+                  }
+                }}
+                className="font-roboto flex w-full items-center justify-center gap-3 rounded-md border border-[#1f1d398f] py-3 font-medium text-[#1F1D39] hover:cursor-pointer hover:bg-black/5"
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 48 48"
