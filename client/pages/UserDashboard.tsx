@@ -9,7 +9,6 @@ import {
   User,
   Settings,
   Clock,
-  DollarSign,
   MessageSquare,
   Send,
   MapPin,
@@ -30,6 +29,7 @@ interface Offer {
   title: string;
   description: string;
   validity: string;
+  img: string;
 }
 
 interface FarmingRequest {
@@ -39,6 +39,11 @@ interface FarmingRequest {
   status: "pending" | "accepted" | "rejected";
   notes: string;
   createdDate: string;
+  landSize?: string;
+  state?: string;
+  district?: string;
+  town?: string;
+  preferredLanguage?: string;
 }
 
 interface Update {
@@ -72,8 +77,9 @@ export default function UserDashboard() {
   ]);
 
   const [formData, setFormData] = useState({
-    duration: "7",
-    budget: "",
+    landSize: "",
+    landAddress: "",
+    preferredLanguage: "",
     notes: "",
   });
 
@@ -93,18 +99,21 @@ export default function UserDashboard() {
       title: "Plowing & Tilling",
       description: "Professional land preparation for optimal crop growth",
       validity: "Valid till Mar 31",
+      img: "/plowing.jpg",
     },
     {
       id: "2",
       title: "Seeding Services",
       description: "Expert seeding with modern machinery",
       validity: "Valid till Apr 15",
+      img: "/seeding.jpeg",
     },
     {
       id: "3",
       title: "Harvesting",
       description: "Efficient harvesting with minimal crop loss",
       validity: "Valid till May 31",
+      img: "/harvesting.avif",
     },
   ];
 
@@ -120,34 +129,38 @@ export default function UserDashboard() {
     },
     {
       id: "2",
-      type: "video",
+      type: "photo",
       date: "2024-02-12",
       caption: "Seeding process in progress",
       thumbnail:
-        "https://images.unsplash.com/photo-1595421683101-2870a65eb776?w=300&h=200&fit=crop",
+        "/seed.avif",
     },
     {
       id: "3",
       type: "photo",
       date: "2024-02-14",
       caption: "Crops growing well",
-      thumbnail:
-        "https://images.unsplash.com/photo-1500595046891-9f3e8eda2ba6?w=300&h=200&fit=crop",
+      thumbnail: "/crop.avif",
     },
   ];
 
   const handleSubmitRequest = (e: React.FormEvent) => {
     e.preventDefault();
     const newRequest: FarmingRequest = {
+      ...formData,
       id: (requests.length + 1).toString(),
-      duration: formData.duration,
-      budget: parseFloat(formData.budget) || 0,
       status: "pending",
-      notes: formData.notes,
+      duration: "",
+      budget: 0,
       createdDate: new Date().toISOString().split("T")[0],
     };
     setRequests([...requests, newRequest]);
-    setFormData({ duration: "7", budget: "", notes: "" });
+    setFormData({
+      landSize: "",
+      landAddress: "",
+      preferredLanguage: "",
+      notes: "",
+    });
   };
 
   const handleUpdateProfile = (e: React.FormEvent) => {
@@ -235,21 +248,27 @@ export default function UserDashboard() {
                   {offers.map((offer) => (
                     <div
                       key={offer.id}
-                      className="bg-white rounded-lg border border-border p-6 hover:shadow-md transition flex-shrink-0 lg:flex-shrink w-80 lg:w-auto"
+                      className="bg-white relative overflow-hidden rounded-lg border border-border hover:shadow-md transition flex-shrink-0 lg:flex-shrink w-80 lg:w-auto"
                     >
-                      <h3 className="text-xl font-bold text-primary mb-2">
-                        {offer.title}
-                      </h3>
-                      <p className="text-muted-foreground text-sm mb-4">
-                        {offer.description}
-                      </p>
-                      <div className="flex items-center justify-between">
-                        <span className="text-xs font-semibold text-green-700 bg-green-50 px-3 py-1 rounded-full">
-                          {offer.validity}
-                        </span>
-                        <Button size="sm" variant="outline">
-                          View Details
-                        </Button>
+                      <div className="relative isolate">
+                        <img
+                          src={offer.img}
+                          alt=""
+                          className="absolute inset-0 opacity-30"
+                        />
+                        <div className="z-10 relative p-6">
+                          <h3 className="text-xl font-bold text-primary mb-2">
+                            {offer.title}
+                          </h3>
+                          <p className="text-muted-foreground text-sm mb-4">
+                            {offer.description}
+                          </p>
+                          <div className="flex items-center justify-between">
+                            <span className="text-xs font-semibold text-green-700 bg-green-50 px-3 py-1 rounded-full">
+                              {offer.validity}
+                            </span>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   ))}
@@ -267,47 +286,68 @@ export default function UserDashboard() {
                   <div className="grid md:grid-cols-2 gap-6">
                     <div>
                       <Label className="text-foreground font-semibold mb-2">
-                        Duration (Days)
+                        Land Size
                       </Label>
                       <div className="relative">
-                        <Clock className="absolute left-3 top-3 w-5 h-5 text-muted-foreground" />
-                        <select
-                          value={formData.duration}
+                        <input
+                          type="text"
+                          name="landSize"
+                          id="landSize"
+                          value={formData.landSize}
                           onChange={(e) =>
                             setFormData({
                               ...formData,
-                              duration: e.target.value,
+                              landSize: e.target.value,
                             })
                           }
-                          className="w-full pl-10 pr-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-                        >
-                          <option value="7">7 days</option>
-                          <option value="15">15 days</option>
-                          <option value="30">30 days</option>
-                          <option value="45">45 days</option>
-                          <option value="60">60 days</option>
-                        </select>
+                          className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                          placeholder="Enter land size in acres"
+                          required
+                        />
                       </div>
                     </div>
 
                     <div>
                       <Label className="text-foreground font-semibold mb-2">
-                        Budget (₹)
+                        Preferred Language For Communication
                       </Label>
                       <div className="relative">
-                        <DollarSign className="absolute left-3 top-3 w-5 h-5 text-muted-foreground" />
                         <Input
-                          type="number"
-                          placeholder="Enter budget amount"
-                          className="pl-10"
-                          value={formData.budget}
+                          type="text"
+                          className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                          placeholder="Enter your preferred language"
+                          value={formData.preferredLanguage}
                           onChange={(e) =>
-                            setFormData({ ...formData, budget: e.target.value })
+                            setFormData({ ...formData, preferredLanguage: e.target.value })
                           }
                           required
                         />
                       </div>
                     </div>
+
+                    <div className="col-span-2">
+                      <Label className="text-foreground font-semibold mb-2">
+                        Land Address
+                      </Label>
+                      <div className="relative">
+                        <input
+                          type="text"
+                          name="landAddress"
+                          id="landAddress"
+                          value={formData.landAddress}
+                          onChange={(e) =>
+                            setFormData({
+                              ...formData,
+                              landAddress: e.target.value,
+                            })
+                          }
+                          className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                          placeholder="Enter the address of your land"
+                          required
+                        />
+                      </div>
+                    </div>
+
                   </div>
 
                   <div>
@@ -354,7 +394,6 @@ export default function UserDashboard() {
                             </span>
                           </div>
                           <div className="flex items-center gap-2">
-                            <DollarSign className="w-4 h-4 text-muted-foreground" />
                             <span className="text-sm font-medium text-foreground">
                               ₹{request.budget.toLocaleString()}
                             </span>
@@ -395,7 +434,7 @@ export default function UserDashboard() {
                         <img
                           src={update.thumbnail}
                           alt={update.caption}
-                          className="w-full h-full object-cover hover:scale-105 transition-transform"
+                          className="w-full h-full object-cover scale-105 hover:scale-110 transition-transform"
                         />
                         {update.type === "video" && (
                           <div className="absolute inset-0 flex items-center justify-center bg-black/30">
