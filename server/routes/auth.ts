@@ -3,18 +3,9 @@ import dotenv from 'dotenv';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import nodemailer from 'nodemailer';
-import { PrismaClient } from '../../generated/prisma/client';
 import { OAuth2Client } from 'google-auth-library';
-import { Pool } from 'pg';
-import { PrismaPg } from '@prisma/adapter-pg';
+import prisma from '../prisma';
 
-const connectionString = `${process.env.DATABASE_URL}`;
-
-// 1. Setup the pool
-const pool = new Pool({ connectionString });
-
-// 2. Create the adapter
-const adapter = new PrismaPg(pool);
 
 // 3. PASS THE ARGUMENT (This is what you missed)
 
@@ -25,7 +16,6 @@ dotenv.config();
 // CONFIGURATION
 // ============================================================================
 
-const PORT = process.env.PORT || 3000;
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '7d';
 const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET || 'your-refresh-secret-key';
@@ -33,7 +23,6 @@ const JWT_REFRESH_EXPIRES_IN = process.env.JWT_REFRESH_EXPIRES_IN || '30d';
 const SALT_ROUNDS = 10;
 
 // Prisma Client
-const prisma = new PrismaClient({ adapter });
 
 // Google OAuth Client
 const oauth2Client = new OAuth2Client(
@@ -207,7 +196,7 @@ const getGoogleUserInfo = async (code: string): Promise<GoogleUserInfo> => {
 // MIDDLEWARE
 // ============================================================================
 
-const authenticateToken = (req: AuthRequest, res: Response, next: NextFunction): void => {
+export const authenticateToken = (req: AuthRequest, res: Response, next: NextFunction): void => {
   try {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN
@@ -442,7 +431,7 @@ const googleCallback = async (req: Request, res: Response): Promise<void> => {
     });
 
     // Redirect to frontend with tokens
-    const redirectUrl = `${process.env.CLIENT_URL}/auth/callback?accessToken=${tokens.accessToken}&refreshToken=${tokens.refreshToken}`;
+    const redirectUrl = `${process.env.CLIENT_URL}/user-dashboard?accessToken=${tokens.accessToken}&refreshToken=${tokens.refreshToken}`;
     res.redirect(redirectUrl);
   } catch (error) {
     console.error('Google callback error:', error);

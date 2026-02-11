@@ -4,6 +4,7 @@ import cors from "cors";
 import { handleDemo } from "./routes/demo";
 import cookieParser from "cookie-parser";
 import authRouter from "./routes/auth";
+import landRequestRouter from "./routes/landRequest";
 
 export function createServer() {
   const app = express();
@@ -27,6 +28,7 @@ export function createServer() {
 
   app.get("/api/demo", handleDemo);
   app.use("/api/auth", authRouter);
+  // app.use("/api/land", landRequestRouter);
 
   return app;
 }

@@ -14,28 +14,28 @@ datasource db {
 }
 
 model User {
-  id            String    @id @default(uuid())
-  name          String
-  email         String    @unique
-  password      String?   // Nullable for OAuth users
-  mobileNumber  String?   @map("mobile_number")
-  
-  // OAuth fields
-  googleId      String?   @unique @map("google_id")
-  profilePicture String?  @map("profile_picture")
-  
-  // Auth fields
-  isVerified    Boolean   @default(false) @map("is_verified")
-  resetPasswordToken String? @map("reset_password_token")
-  resetPasswordExpires DateTime? @map("reset_password_expires")
-  
-  // Timestamps
-  createdAt     DateTime  @default(now()) @map("created_at")
-  updatedAt     DateTime  @updatedAt @map("updated_at")
+  id           String  @id @default(uuid())
+  name         String
+  email        String  @unique
+  password     String? // Nullable for OAuth users
+  mobileNumber String? @map("mobile_number")
 
-  @@map("users")
+  // OAuth fields
+  googleId       String? @unique @map("google_id")
+  profilePicture String? @map("profile_picture")
+
+  // Auth fields
+  isVerified           Boolean   @default(false) @map("is_verified")
+  resetPasswordToken   String?   @map("reset_password_token")
+  resetPasswordExpires DateTime? @map("reset_password_expires")
+
+  // Timestamps
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   requests FarmingRequest[]
+
+  @@map("users")
 }
 
 model Offer {
@@ -54,11 +54,15 @@ enum FarmingRequestStatus {
 }
 
 model FarmingRequest {
-  id        String               @id @default(uuid())
-  userId    String
-  status    FarmingRequestStatus @default(PENDING)
-  createdAt DateTime             @default(now())
-  updatedAt DateTime             @updatedAt
+  id                String               @id @default(uuid())
+  userId            String
+  status            FarmingRequestStatus @default(PENDING)
+  landSize          String
+  preferredLanguage String
+  landAddress       String
+  notes             String?
+  createdAt         DateTime             @default(now())
+  updatedAt         DateTime             @updatedAt
 
   user User @relation(fields: [userId], references: [id])
 }

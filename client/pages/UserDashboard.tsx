@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams, useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -53,6 +53,7 @@ interface Update {
 
 export default function UserDashboard() {
   const [userName, setUserName] = useState("");
+  const [profilePicture, setProfilePicture] = useState("");
   const [activeTab, setActiveTab] = useState("dashboard");
   const [requests, setRequests] = useState<FarmingRequest[]>([
     {
@@ -129,8 +130,7 @@ export default function UserDashboard() {
       type: "photo",
       date: "2024-02-12",
       caption: "Seeding process in progress",
-      thumbnail:
-        "/seed.avif",
+      thumbnail: "/seed.avif",
     },
     {
       id: "3",
@@ -179,17 +179,56 @@ export default function UserDashboard() {
   };
 
   const acceptedRequest = requests.find((r) => r.status === "accepted");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const accessToken =
+    searchParams.get("accessToken") || localStorage.getItem("accessToken");
+  const refreshToken =
+    searchParams.get("refreshToken") || localStorage.getItem("refreshToken");
+  setSearchParams({ accessToken: "", refreshToken: "" });
+
+  useEffect(() => {
+    if (accessToken && refreshToken) {
+      fetch("/api/auth/me", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `Bearer ${accessToken}`,
+        },
+      }).then(async (res) => {
+        const payload = await res.json();
+
+        if (payload.user) {
+          localStorage.setItem("user", JSON.stringify(payload.user));
+          localStorage.setItem("accessToken", accessToken || "");
+          localStorage.setItem("refreshToken", refreshToken || "");
+        } else {
+          alert(accessToken);
+          localStorage.clear();
+          window.location.href = "/user-login";
+        }
+
+        setUserName(payload.user.name);
+      });
+    } else {
+      const user = JSON.parse(localStorage.getItem("user") || "null");
+      const storedAccessToken = localStorage.getItem("accessToken");
+
+      if (user && storedAccessToken) {
+        setUserName(user.name);
+      } else {
+        alert(accessToken + "NG");
+        localStorage.clear();
+        window.location.href = "/user-login";
+      }
+    }
+  }, [accessToken, refreshToken]);
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user") || "null");
-    const accessToken = localStorage.getItem("accessToken");
-
-    if (user && accessToken) {
-      setUserName(user.name);
-    } else {
-      window.location.href = "/login";
+    if (user.profilePicture) {
+      setProfilePicture(user.profilePicture);
     }
-  }, []);
+  }, [userName]);
 
   return (
     <div className="min-h-screen bg-background">
@@ -212,9 +251,17 @@ export default function UserDashboard() {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="sm" className="gap-2">
-                  <div className="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center">
-                    <User className="w-5 h-5 text-primary" />
-                  </div>
+                  {profilePicture ? (
+                    <img
+                      src={`${profilePicture}?sz=500`}
+                      alt="Profile"
+                      className="w-8 h-8 rounded-full"
+                    />
+                  ) : (
+                    <div className="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center">
+                      <User className="w-4 h-4 mr-2" />
+                    </div>
+                  )}
                   <ChevronDown className="w-4 h-4" />
                 </Button>
               </DropdownMenuTrigger>
@@ -228,9 +275,12 @@ export default function UserDashboard() {
                   Settings
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link onClick={() => {
-                    localStorage.clear();
-                  }} to="/">
+                  <Link
+                    onClick={() => {
+                      localStorage.clear();
+                    }}
+                    to="/"
+                  >
                     <LogOut className="w-4 h-4 mr-2" />
                     Logout
                   </Link>
@@ -328,7 +378,10 @@ export default function UserDashboard() {
                           placeholder="Enter your preferred language"
                           value={formData.preferredLanguage}
                           onChange={(e) =>
-                            setFormData({ ...formData, preferredLanguage: e.target.value })
+                            setFormData({
+                              ...formData,
+                              preferredLanguage: e.target.value,
+                            })
                           }
                           required
                         />
@@ -357,7 +410,6 @@ export default function UserDashboard() {
                         />
                       </div>
                     </div>
-
                   </div>
 
                   <div>
