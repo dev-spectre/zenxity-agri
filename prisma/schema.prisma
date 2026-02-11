@@ -42,7 +42,8 @@ model Offer {
   id          String   @id @default(uuid())
   title       String
   description String?
-  validUntil  DateTime
+  validUntil  String
+  img         String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
@@ -64,13 +65,19 @@ model FarmingRequest {
   createdAt         DateTime             @default(now())
   updatedAt         DateTime             @updatedAt
 
+  updates FarmingUpdates[]
+
   user User @relation(fields: [userId], references: [id])
 }
 
 model FarmingUpdates {
   id        String   @id @default(uuid())
   title     String
-  content   String
+  content   String?
+  img       String?
+  requestId String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  request FarmingRequest @relation(fields: [requestId], references: [id])
 }

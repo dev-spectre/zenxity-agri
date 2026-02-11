@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -29,11 +29,15 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 interface FarmingRequest {
   id: string;
   userName: string;
-  duration: string;
-  budget: number;
-  status: "pending" | "accepted" | "rejected";
+  status:
+    | "pending"
+    | "accepted"
+    | "rejected"
+    | "PENDING"
+    | "APPROVED"
+    | "DECLINED";
   notes: string;
-  createdDate: string;
+  createdAt: string;
 }
 
 interface Offer {
@@ -41,6 +45,7 @@ interface Offer {
   title: string;
   description: string;
   validity: string;
+  img?: string;
 }
 
 interface UploadUpdate {
@@ -51,55 +56,15 @@ interface UploadUpdate {
 
 export default function AdminDashboard() {
   const [activeSection, setActiveSection] = useState("dashboard");
-  const [requests, setRequests] = useState<FarmingRequest[]>([
-    {
-      id: "1",
-      userName: "John Doe",
-      duration: "30",
-      budget: 15000,
-      status: "pending",
-      notes: "Plowing and tilling",
-      createdDate: "2024-02-01",
-    },
-    {
-      id: "2",
-      userName: "Jane Smith",
-      duration: "15",
-      budget: 8000,
-      status: "accepted",
-      notes: "Land preparation",
-      createdDate: "2024-02-05",
-    },
-    {
-      id: "3",
-      userName: "Ram Kumar",
-      duration: "45",
-      budget: 25000,
-      status: "pending",
-      notes: "Complete farming cycle",
-      createdDate: "2024-02-08",
-    },
-  ]);
+  const [requests, setRequests] = useState<any[]>([]);
 
-  const [offers, setOffers] = useState<Offer[]>([
-    {
-      id: "1",
-      title: "Plowing & Tilling",
-      description: "Professional land preparation",
-      validity: "Valid till Mar 31",
-    },
-    {
-      id: "2",
-      title: "Seeding Services",
-      description: "Expert seeding with machinery",
-      validity: "Valid till Apr 15",
-    },
-  ]);
+  const [offers, setOffers] = useState<Offer[]>([]);
 
   const [newOffer, setNewOffer] = useState({
     title: "",
     description: "",
     validity: "",
+    img: "",
   });
   const [showAddOfferForm, setShowAddOfferForm] = useState(false);
   const [uploadData, setUploadData] = useState({
@@ -108,7 +73,10 @@ export default function AdminDashboard() {
   });
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
 
-  const handleRequestAction = (id: string, action: "accept" | "reject") => {
+  const handleRequestAction = async (
+    id: string,
+    action: "accept" | "reject",
+  ) => {
     setRequests(
       requests.map((req) =>
         req.id === id
@@ -116,9 +84,21 @@ export default function AdminDashboard() {
           : req,
       ),
     );
+
+    await fetch("/api/land/status/admin", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "Application/json",
+        authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      },
+      body: JSON.stringify({
+        reqId: id,
+        status: action,
+      }),
+    });
   };
 
-  const handleAddOffer = (e: React.FormEvent) => {
+  const handleAddOffer = async (e: React.FormEvent) => {
     e.preventDefault();
     if (newOffer.title && newOffer.description) {
       const offer: Offer = {
@@ -126,37 +106,100 @@ export default function AdminDashboard() {
         title: newOffer.title,
         description: newOffer.description,
         validity: newOffer.validity,
+        img: newOffer.img,
       };
       setOffers([...offers, offer]);
-      setNewOffer({ title: "", description: "", validity: "" });
+      await fetch("/api/offer/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "Application/json",
+          authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+        body: JSON.stringify({
+          title: offer.title,
+          description: offer.description,
+          validUntil: offer.validity,
+          img: offer.img,
+        }),
+      });
+      setNewOffer({ title: "", description: "", validity: "", img: "" });
       setShowAddOfferForm(false);
     }
   };
 
-  const handleDeleteOffer = (id: string) => {
+  const handleDeleteOffer = async (id: string) => {
     setOffers(offers.filter((offer) => offer.id !== id));
+    await fetch("/api/offer/delete", {
+      method: "POST",
+      headers: {
+        "Content-Type": "Application/json",
+        authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      },
+      body: JSON.stringify({ id }),
+    });
   };
 
-  const handleUploadUpdate = (e: React.FormEvent) => {
+  const handleUploadUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
     if (uploadData.requestId && uploadData.caption) {
-      // Handle file upload logic here
+      // Handle file upload logic herec
+      const formData = new FormData();
+      formData.append("file", selectedFiles[0]);
+      formData.append("upload_preset", "zenxity");
+
+      try {
+        const res = await fetch(
+          `https://api.cloudinary.com/v1_1/dzcbyadrb/image/upload`,
+          {
+            method: "POST",
+            body: formData,
+          },
+        );
+
+        if (!res.ok) throw new Error("Upload failed");
+
+        const data = await res.json();
+        const img = data.secure_url; // The URL of the uploaded image
+        await fetch("/api/updates/", {
+          method: "POST",
+          headers: {
+            "Content-Type": "Application/json",
+            authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+          body: JSON.stringify({
+            requestId: uploadData.requestId,
+            title: uploadData.caption,
+            img,
+          }),
+        });
+      } catch (error) {
+        console.error("Error uploading:", error);
+      }
+
       console.log("Uploading:", uploadData, selectedFiles);
       setUploadData({ requestId: "", caption: "" });
       setSelectedFiles([]);
     }
   };
 
-  const acceptedRequests = requests.filter((r) => r.status === "accepted");
-  const pendingRequests = requests.filter((r) => r.status === "pending");
+  const acceptedRequests = requests.filter(
+    (r) =>
+      r.status.toLowerCase() === "accepted" ||
+      r.status.toLowerCase() === "approved",
+  );
+  const pendingRequests = requests.filter(
+    (r) => r.status.toLowerCase() === "pending",
+  );
 
   const getStatusColor = (status: string) => {
-    switch (status) {
+    switch (status.toLocaleLowerCase()) {
       case "pending":
         return "bg-yellow-100 text-yellow-800 border-yellow-300";
       case "accepted":
+      case "approved":
         return "bg-green-100 text-green-800 border-green-300";
       case "rejected":
+      case "declined":
         return "bg-red-100 text-red-800 border-red-300";
       default:
         return "bg-gray-100 text-gray-800 border-gray-300";
@@ -169,6 +212,39 @@ export default function AdminDashboard() {
     { id: "uploads", label: "Upload Updates", icon: Upload },
     { id: "offers", label: "Offers Management", icon: Megaphone },
   ];
+
+  useEffect(() => {
+    fetch("/api/land/request/admin", {
+      method: "GET",
+      headers: {
+        authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setRequests(data.farmingRequests);
+      });
+
+    fetch("/api/offer/all", {
+      method: "GET",
+      headers: {
+        authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setOffers(
+          data.offers.map((offer) => {
+            return {
+              ...offer,
+              validity: offer.validUntil,
+            };
+          }) || [],
+        );
+      });
+  }, []);
+
+  console.log(requests);
 
   return (
     <div className="min-h-screen bg-background flex">
@@ -213,7 +289,13 @@ export default function AdminDashboard() {
 
           {/* Logout */}
           <div className="border-t border-border p-4">
-            <Link to="/" className="w-full">
+            <Link
+              onClick={() => {
+                localStorage.clear();
+              }}
+              to="/"
+              className="w-full"
+            >
               <Button
                 variant="ghost"
                 className="w-full justify-start gap-2 text-red-600 hover:bg-red-50"
@@ -329,10 +411,10 @@ export default function AdminDashboard() {
                           User
                         </th>
                         <th className="text-left py-3 px-2 text-muted-foreground font-semibold">
-                          Duration
+                          Size (Acres)
                         </th>
                         <th className="text-left py-3 px-2 text-muted-foreground font-semibold">
-                          Budget
+                          City
                         </th>
                         <th className="text-left py-3 px-2 text-muted-foreground font-semibold">
                           Status
@@ -346,20 +428,20 @@ export default function AdminDashboard() {
                           className="border-b border-border hover:bg-gray-50"
                         >
                           <td className="py-3 px-2 text-foreground">
-                            {req.userName}
+                            {req.user.name}
                           </td>
                           <td className="py-3 px-2 text-muted-foreground">
-                            {req.duration} days
+                            {req.landSize}
                           </td>
                           <td className="py-3 px-2 text-foreground font-medium">
-                            ₹{req.budget.toLocaleString()}
+                            {req.landAddress}
                           </td>
                           <td className="py-3 px-2">
                             <span
                               className={`px-3 py-1 rounded-full border text-xs font-semibold ${getStatusColor(req.status)}`}
                             >
                               {req.status.charAt(0).toUpperCase() +
-                                req.status.slice(1)}
+                                req.status.slice(1).toLowerCase()}
                             </span>
                           </td>
                         </tr>
@@ -387,10 +469,10 @@ export default function AdminDashboard() {
                           User
                         </th>
                         <th className="text-left py-4 px-6 text-foreground font-semibold">
-                          Duration
+                          Size (Acres)
                         </th>
                         <th className="text-left py-4 px-6 text-foreground font-semibold">
-                          Budget
+                          City
                         </th>
                         <th className="text-left py-4 px-6 text-foreground font-semibold">
                           Status
@@ -406,25 +488,25 @@ export default function AdminDashboard() {
                           key={req.id}
                           className="border-b border-border hover:bg-gray-50"
                         >
-                          <td className="py-4 px-6 text-foreground font-medium">
-                            {req.userName}
+                          <td className="py-4 px-6 text-foreground  font-medium">
+                            {req.user.name}
                           </td>
                           <td className="py-4 px-6 text-muted-foreground">
-                            {req.duration} days
+                            {req.landSize}
                           </td>
                           <td className="py-4 px-6 text-foreground">
-                            ₹{req.budget.toLocaleString()}
+                            {req.landAddress}
                           </td>
                           <td className="py-4 px-6">
                             <span
                               className={`px-3 py-1 rounded-full border text-xs font-semibold ${getStatusColor(req.status)}`}
                             >
                               {req.status.charAt(0).toUpperCase() +
-                                req.status.slice(1)}
+                                req.status.slice(1).toLowerCase()}
                             </span>
                           </td>
                           <td className="py-4 px-6">
-                            {req.status === "pending" && (
+                            {req.status.toLowerCase() === "pending" && (
                               <div className="flex gap-2">
                                 <Button
                                   size="sm"
@@ -448,9 +530,10 @@ export default function AdminDashboard() {
                                 </Button>
                               </div>
                             )}
-                            {req.status !== "pending" && (
+                            {req.status.toLowerCase() !== "pending" && (
                               <span className="text-muted-foreground text-xs">
-                                {req.status === "accepted"
+                                {req.status.toLowerCase() === "accepted" ||
+                                req.status.toLowerCase() === "approved"
                                   ? "Accepted"
                                   : "Rejected"}
                               </span>
@@ -494,9 +577,11 @@ export default function AdminDashboard() {
                       >
                         <option value="">-- Choose a request --</option>
                         {acceptedRequests.map((req) => (
-                          <option key={req.id} value={req.id}>
-                            {req.userName} - {req.duration} days - ₹{req.budget}
-                          </option>
+                          <option
+                            className="text-black"
+                            key={req.id}
+                            value={req.id}
+                          >{`${req.user.name} | ${req.landAddress} | ${req.landSize} Acres`}</option>
                         ))}
                       </select>
                     </div>
@@ -650,6 +735,20 @@ export default function AdminDashboard() {
                       />
                     </div>
 
+                    <div>
+                      <Label className="text-foreground font-semibold mb-2">
+                        Background Image
+                      </Label>
+                      <Input
+                        type="text"
+                        placeholder="e.g., https://cloudinary.com/image.jpg"
+                        value={newOffer.img}
+                        onChange={(e) =>
+                          setNewOffer({ ...newOffer, img: e.target.value })
+                        }
+                      />
+                    </div>
+
                     <div className="flex gap-4">
                       <Button type="submit">Save Offer</Button>
                       <Button
@@ -661,6 +760,7 @@ export default function AdminDashboard() {
                             title: "",
                             description: "",
                             validity: "",
+                            img: "",
                           });
                         }}
                       >
@@ -690,10 +790,6 @@ export default function AdminDashboard() {
                         </p>
                       </div>
                       <div className="flex gap-2">
-                        <Button size="sm" variant="outline" className="gap-2">
-                          <Edit className="w-4 h-4" />
-                          Edit
-                        </Button>
                         <Button
                           size="sm"
                           variant="destructive"

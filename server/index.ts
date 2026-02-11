@@ -5,6 +5,8 @@ import { handleDemo } from "./routes/demo";
 import cookieParser from "cookie-parser";
 import authRouter from "./routes/auth";
 import landRequestRouter from "./routes/landRequest";
+import offerRouter from "./routes/offers";
+import updateRouter from "./routes/updates";
 
 export function createServer() {
   const app = express();
@@ -29,6 +31,7 @@ export function createServer() {
   app.get("/api/demo", handleDemo);
   app.use("/api/auth", authRouter);
   app.use("/api/land", landRequestRouter);
-
+  app.use("/api/offer", offerRouter);
+  app.use("/api/updates", updateRouter);
   return app;
 }

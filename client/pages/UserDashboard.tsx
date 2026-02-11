@@ -3,13 +3,7 @@ import { Link, useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  LogOut,
-  ChevronDown,
-  User,
-  Settings,
-  Send,
-} from "lucide-react";
+import { LogOut, ChevronDown, User, Settings, Send } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -23,6 +17,7 @@ interface Offer {
   title: string;
   description: string;
   validity: string;
+  validUntil?: string;
   img: string;
 }
 
@@ -49,6 +44,8 @@ export default function UserDashboard() {
   const [profilePicture, setProfilePicture] = useState("");
   const [activeTab, setActiveTab] = useState("dashboard");
   const [requests, setRequests] = useState<FarmingRequest[]>([]);
+  const [offers, setOffers] = useState<Offer[]>();
+  const [liveUpdates, setLiveUpdates] = useState<Update[]>([]);
 
   const [formData, setFormData] = useState({
     landSize: "",
@@ -66,33 +63,8 @@ export default function UserDashboard() {
 
   const [isEditingProfile, setIsEditingProfile] = useState(false);
 
-  // Current Offers Mock Data
-  const offers: Offer[] = [
-    {
-      id: "1",
-      title: "Plowing & Tilling",
-      description: "Professional land preparation for optimal crop growth",
-      validity: "Valid till Mar 31",
-      img: "/plowing.jpg",
-    },
-    {
-      id: "2",
-      title: "Seeding Services",
-      description: "Expert seeding with modern machinery",
-      validity: "Valid till Apr 15",
-      img: "/seeding.jpeg",
-    },
-    {
-      id: "3",
-      title: "Harvesting",
-      description: "Efficient harvesting with minimal crop loss",
-      validity: "Valid till May 31",
-      img: "/harvesting.avif",
-    },
-  ];
-
   // Mock Live Updates
-  const liveUpdates: Update[] = [
+  const liveUpdate: Update[] = [
     {
       id: "1",
       type: "photo",
@@ -228,6 +200,42 @@ export default function UserDashboard() {
   }, [accessToken, refreshToken]);
 
   useEffect(() => {
+    fetch("api/offer/all", {
+      method: "GET",
+      headers: {
+        "Content-Type": "Application/json",
+        authorization: `Bearer ${accessToken}`,
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setOffers([...data.offers]);
+      });
+
+    fetch("api/updates/my", {
+      method: "GET",
+      headers: {
+        "Content-Type": "Application/json",
+        authorization: `Bearer ${accessToken}`,
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setLiveUpdates(
+          data.updates?.map((update) => {
+            return {
+              type: "photo",
+              date: new Date(update.createdAt).toLocaleDateString(),
+              caption: update.title,
+              thumbnail: update.img,
+              ...update,
+            };
+          }) || [],
+        );
+      });
+  }, [accessToken, refreshToken]);
+
+  useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user") || "null");
     if (user?.profilePicture) {
       setProfilePicture(user.profilePicture);
@@ -300,12 +308,12 @@ export default function UserDashboard() {
           <div className="max-w-7xl mx-auto space-y-8">
             {/* Section 1: Current Offers */}
             <section>
-              <h2 className="text-2xl font-bold text-foreground mb-6">
+              <h2 className="text-2xl font-bold text-green-600 text-foreground mb-6">
                 Current Offers
               </h2>
               <div className="overflow-x-auto pb-4">
                 <div className="flex gap-6 min-w-max lg:min-w-full lg:grid lg:grid-cols-3">
-                  {offers.map((offer) => (
+                  {offers?.map((offer) => (
                     <div
                       key={offer.id}
                       className="bg-white relative overflow-hidden rounded-lg border border-border hover:shadow-md transition flex-shrink-0 lg:flex-shrink w-80 lg:w-auto"
@@ -314,10 +322,10 @@ export default function UserDashboard() {
                         <img
                           src={offer.img}
                           alt=""
-                          className="absolute inset-0 opacity-30"
+                          className="absolute inset-0 opacity-30 object-cover w-full"
                         />
                         <div className="z-10 relative p-6">
-                          <h3 className="text-xl font-bold text-primary mb-2">
+                          <h3 className="text-xl text-black font-bold text-primary mb-2">
                             {offer.title}
                           </h3>
                           <p className="text-muted-foreground text-sm mb-4">
@@ -325,7 +333,7 @@ export default function UserDashboard() {
                           </p>
                           <div className="flex items-center justify-between">
                             <span className="text-xs font-semibold text-green-700 bg-green-50 px-3 py-1 rounded-full">
-                              {offer.validity}
+                              {offer.validity || offer.validUntil}
                             </span>
                           </div>
                         </div>
@@ -338,7 +346,7 @@ export default function UserDashboard() {
 
             {/* Section 2: Post a Farming Request */}
             <section>
-              <h2 className="text-2xl font-bold text-foreground mb-6">
+              <h2 className="text-2xl font-bold text-green-600 text-foreground mb-6">
                 Post a Farming Request
               </h2>
               <div className="bg-white rounded-lg border border-border p-8">
@@ -437,7 +445,7 @@ export default function UserDashboard() {
 
             {/* Section 3: Field Status */}
             <section>
-              <h2 className="text-2xl font-bold text-foreground mb-6">
+              <h2 className="text-2xl font-bold text-green-600 text-foreground mb-6">
                 Your Requests
               </h2>
               <div className="grid gap-4">
@@ -449,7 +457,7 @@ export default function UserDashboard() {
                     <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                       <div className="flex-1">
                         <div className="flex items-center gap-4 flex-wrap">
-                          <div className="flex items-center font-bold text-green-600 gap-2">
+                          <div className="flex items-center font-bold text-black gap-2">
                             {request.landAddress}
                           </div>
                         </div>
@@ -476,7 +484,7 @@ export default function UserDashboard() {
             {/* Section 4: Live Farming Updates (Only if Accepted) */}
             {acceptedRequest && (
               <section>
-                <h2 className="text-2xl font-bold text-foreground mb-6">
+                <h2 className="text-2xl font-bold text-green-600 text-foreground mb-6">
                   Live Farming Updates
                 </h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">

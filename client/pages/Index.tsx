@@ -159,6 +159,18 @@ export default function Index() {
                 <li>Direct communication with your farming team</li>
               </ul>
             </div>
+            <div>
+              <iframe
+                width={1091 * 0.5}
+                height={616 * 0.5}
+                src="https://www.youtube.com/embed/r9dc0c3adfo"
+                title="Ideal Lands to Active Fields"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                referrerPolicy="strict-origin-when-cross-origin"
+                allowFullScreen
+              ></iframe>
+            </div>
           </div>
         </div>
       </section>

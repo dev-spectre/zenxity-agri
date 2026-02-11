@@ -16,10 +16,27 @@ export default function AdminLogin() {
     e.preventDefault();
     setLoading(true);
     // Simulate API call
-    setTimeout(() => {
-      setLoading(false);
+    const res = await fetch("/api/auth/admin/signin", {
+      method: "POST",
+      headers: {
+        "Content-Type": "Application/json",
+      },
+      body: JSON.stringify({
+        email,
+        password,
+      }),
+    });
+    setLoading(false);
+    const payload = await res.json();
+    if (payload.accessToken && payload.refreshToken) {
+      localStorage.clear();
+      localStorage.setItem("accessToken", payload.accessToken);
+      localStorage.setItem("refreshToken", payload.refreshToken);
       navigate("/admin-dashboard");
-    }, 1000);
+    } else {
+      navigate("/admin-login");
+      localStorage.clear();
+    }
   };
 
   return (
