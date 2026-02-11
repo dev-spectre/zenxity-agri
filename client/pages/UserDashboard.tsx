@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link, useParams, useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -9,9 +9,6 @@ import {
   User,
   Settings,
   Send,
-  Calendar,
-  Download,
-  Share2,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -31,16 +28,12 @@ interface Offer {
 
 interface FarmingRequest {
   id: string;
-  duration: string;
-  budget: number;
   status: "pending" | "accepted" | "rejected";
   notes: string;
-  createdDate: string;
+  createdAt?: string;
   landSize?: string;
-  state?: string;
-  district?: string;
-  town?: string;
   preferredLanguage?: string;
+  landAddress?: string;
 }
 
 interface Update {
@@ -55,24 +48,7 @@ export default function UserDashboard() {
   const [userName, setUserName] = useState("");
   const [profilePicture, setProfilePicture] = useState("");
   const [activeTab, setActiveTab] = useState("dashboard");
-  const [requests, setRequests] = useState<FarmingRequest[]>([
-    {
-      id: "1",
-      duration: "30",
-      budget: 15000,
-      status: "accepted",
-      notes: "Plowing and tilling for paddy cultivation",
-      createdDate: "2024-02-01",
-    },
-    {
-      id: "2",
-      duration: "15",
-      budget: 8000,
-      status: "pending",
-      notes: "Land preparation",
-      createdDate: "2024-02-05",
-    },
-  ]);
+  const [requests, setRequests] = useState<FarmingRequest[]>([]);
 
   const [formData, setFormData] = useState({
     landSize: "",
@@ -141,17 +117,23 @@ export default function UserDashboard() {
     },
   ];
 
-  const handleSubmitRequest = (e: React.FormEvent) => {
+  const handleSubmitRequest = async (e: React.FormEvent) => {
     e.preventDefault();
     const newRequest: FarmingRequest = {
       ...formData,
       id: (requests.length + 1).toString(),
+      createdAt: new Date().toISOString(),
       status: "pending",
-      duration: "",
-      budget: 0,
-      createdDate: new Date().toISOString().split("T")[0],
     };
     setRequests([...requests, newRequest]);
+    await fetch("/api/land/request", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      },
+      body: JSON.stringify(newRequest),
+    });
     setFormData({
       landSize: "",
       landAddress: "",
@@ -170,15 +152,21 @@ export default function UserDashboard() {
       case "pending":
         return "bg-yellow-100 text-yellow-800 border-yellow-300";
       case "accepted":
+      case "approved":
         return "bg-green-100 text-green-800 border-green-300";
       case "rejected":
+      case "declined":
         return "bg-red-100 text-red-800 border-red-300";
       default:
         return "bg-gray-100 text-gray-800 border-gray-300";
     }
   };
 
-  const acceptedRequest = requests.find((r) => r.status === "accepted");
+  const acceptedRequest = requests.find(
+    (r) =>
+      r.status.toLocaleLowerCase() === "accepted" ||
+      r.status.toLocaleLowerCase() === "approved",
+  );
   const [searchParams, setSearchParams] = useSearchParams();
   const accessToken =
     searchParams.get("accessToken") || localStorage.getItem("accessToken");
@@ -198,14 +186,31 @@ export default function UserDashboard() {
         const payload = await res.json();
 
         if (payload.user) {
+          setProfileData({
+            name: payload.user.name,
+            email: payload.user.email,
+            mobile: payload.user.mobileNumber,
+            password: "",
+          });
           localStorage.setItem("user", JSON.stringify(payload.user));
           localStorage.setItem("accessToken", accessToken || "");
           localStorage.setItem("refreshToken", refreshToken || "");
         } else {
-          alert(accessToken);
           localStorage.clear();
           window.location.href = "/user-login";
         }
+
+        fetch("/api/land/request", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            authorization: `Bearer ${accessToken}`,
+          },
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            setRequests(data.requests);
+          });
 
         setUserName(payload.user.name);
       });
@@ -216,7 +221,6 @@ export default function UserDashboard() {
       if (user && storedAccessToken) {
         setUserName(user.name);
       } else {
-        alert(accessToken + "NG");
         localStorage.clear();
         window.location.href = "/user-login";
       }
@@ -225,7 +229,7 @@ export default function UserDashboard() {
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user") || "null");
-    if (user.profilePicture) {
+    if (user?.profilePicture) {
       setProfilePicture(user.profilePicture);
     }
   }, [userName]);
@@ -269,10 +273,6 @@ export default function UserDashboard() {
                 <DropdownMenuItem onClick={() => setActiveTab("profile")}>
                   <User className="w-4 h-4 mr-2" />
                   Profile
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setActiveTab("settings")}>
-                  <Settings className="w-4 h-4 mr-2" />
-                  Settings
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
                   <Link
@@ -390,7 +390,7 @@ export default function UserDashboard() {
 
                     <div className="col-span-2">
                       <Label className="text-foreground font-semibold mb-2">
-                        Land Address
+                        City
                       </Label>
                       <div className="relative">
                         <input
@@ -405,7 +405,7 @@ export default function UserDashboard() {
                             })
                           }
                           className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-                          placeholder="Enter the address of your land"
+                          placeholder="Enter the city in which your land is located"
                           required
                         />
                       </div>
@@ -448,31 +448,24 @@ export default function UserDashboard() {
                   >
                     <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                       <div className="flex-1">
-                        <div className="flex items-center gap-4 mb-3 flex-wrap">
-                          <div className="flex items-center gap-2">
-                            <Calendar className="w-4 h-4 text-muted-foreground" />
-                            <span className="text-sm font-medium text-foreground">
-                              {request.duration} days
-                            </span>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <span className="text-sm font-medium text-foreground">
-                              ₹{request.budget.toLocaleString()}
-                            </span>
+                        <div className="flex items-center gap-4 flex-wrap">
+                          <div className="flex items-center font-bold text-green-600 gap-2">
+                            {request.landAddress}
                           </div>
                         </div>
                         <p className="text-muted-foreground text-sm mb-3">
                           {request.notes}
                         </p>
                         <p className="text-xs text-muted-foreground">
-                          Submitted on {request.createdDate}
+                          Submitted on{" "}
+                          {new Date(request.createdAt).toLocaleDateString()}
                         </p>
                       </div>
                       <div
-                        className={`px-4 py-2 rounded-full border font-semibold text-sm whitespace-nowrap ${getStatusColor(request.status)}`}
+                        className={`px-4 py-2 rounded-full border font-semibold text-sm whitespace-nowrap ${getStatusColor(request.status.toLocaleLowerCase())}`}
                       >
                         {request.status.charAt(0).toUpperCase() +
-                          request.status.slice(1)}
+                          request.status.slice(1).toLocaleLowerCase()}
                       </div>
                     </div>
                   </div>
@@ -513,24 +506,6 @@ export default function UserDashboard() {
                         <p className="text-sm font-medium text-foreground">
                           {update.caption}
                         </p>
-                        <div className="flex gap-2 mt-4">
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            className="flex-1"
-                          >
-                            <Download className="w-4 h-4 mr-1" />
-                            Download
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            className="flex-1"
-                          >
-                            <Share2 className="w-4 h-4 mr-1" />
-                            Share
-                          </Button>
-                        </div>
                       </div>
                     </div>
                   ))}

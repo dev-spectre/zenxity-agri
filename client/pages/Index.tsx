@@ -1,8 +1,17 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Leaf, Clock, TrendingUp, Award } from "lucide-react";
+import { useEffect, useState } from "react";
 
 export default function Index() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  useEffect(() => {
+    const accessToken = localStorage.getItem("accessToken");
+    if (accessToken) {
+      setIsLoggedIn(true);
+    }
+  }, []);
+
   return (
     <div className="min-h-screen bg-background">
       {/* Navigation */}
@@ -13,9 +22,15 @@ export default function Index() {
             <span className="text-3xl font-bold text-primary">Zenxity</span>
           </div>
           <div className="flex gap-4">
-            <Link to="/user-login">
-              <Button size="sm">Login</Button>
-            </Link>
+            {isLoggedIn ? (
+              <Link to="/user-dashboard">
+                <Button size="sm">Dashboard</Button>
+              </Link>
+            ) : (
+              <Link to="/user-login">
+                <Button size="sm">Login</Button>
+              </Link>
+            )}
           </div>
         </div>
       </nav>
@@ -186,29 +201,25 @@ export default function Index() {
                 name: "Muthu Mohammed A",
                 role: "Founder & COO",
                 bio: "Leads company vision, strategic growth, and partnerships to expand Zenxity's contract farming network.",
-                image:
-                  "/muthu.jpeg",
+                image: "/muthu.jpeg",
               },
               {
                 name: "Abhishek Dallas",
                 role: "Founder & CTO",
                 bio: "Leads technology development, platform architecture, and live farming update systems.",
-                image:
-                  "/abhi.png",
+                image: "/abhi.png",
               },
               {
                 name: "Kavyashri K P",
                 role: "Founder & CMO",
                 bio: "Handles marketing strategy, brand communication, and user outreach across digital platforms.",
-                image:
-                  "/kavya.png",
+                image: "/kavya.png",
               },
               {
                 name: "Saniya S",
                 role: "Founder & CCSO",
                 bio: "Oversees customer support systems, ensures landowner satisfaction, and manages the overall customer success journey.",
-                image:
-                  "/sanya.jpeg",
+                image: "/sanya.jpeg",
               },
             ].map((founder, i) => (
               <div

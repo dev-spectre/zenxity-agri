@@ -28,7 +28,7 @@ export function createServer() {
 
   app.get("/api/demo", handleDemo);
   app.use("/api/auth", authRouter);
-  // app.use("/api/land", landRequestRouter);
+  app.use("/api/land", landRequestRouter);
 
   return app;
 }

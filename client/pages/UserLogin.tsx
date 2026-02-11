@@ -46,29 +46,37 @@ export default function UserLogin() {
     e.preventDefault();
     setLoading(true);
     // Simulate API call
-    const res = await fetch("/api/auth/signup", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        name: fullName,
-        email,
-        password,
-        mobileNumber: mobile,
-      }),
-    });
+    try {
+      const res = await fetch("/api/auth/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: fullName,
+          email,
+          password,
+          mobileNumber: mobile,
+        }),
+      });
 
-    const payload = await res.json();
-    if (payload.user) {
-      localStorage.setItem("user", JSON.stringify(payload.user));
-      localStorage.setItem("accessToken", payload.accessToken);
-      localStorage.setItem("refreshToken", payload.refreshToken);
+      const payload = await res.json();
+      if (payload.user) {
+        localStorage.setItem("user", JSON.stringify(payload.user));
+        localStorage.setItem("accessToken", payload.accessToken);
+        localStorage.setItem("refreshToken", payload.refreshToken);
 
-      navigate("/user-dashboard");
+        navigate("/user-dashboard");
+      } else if (payload.valid === false) {
+        alert(payload.message);
+      }
+
+      setLoading(false);
+    } catch (error) {
+      alert(error);
+      setLoading(false);
+      return;
     }
-
-    setLoading(false);
   };
 
   return (
