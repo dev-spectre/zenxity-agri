@@ -1,6 +1,6 @@
 import { Router } from "express";
 import prisma from "../prisma";
-import { FarmingRequestStatus } from "../../generated/prisma/enums";
+import { FarmingRequestStatus } from "../generated/prisma/enums";
 import { authenticateToken } from "./auth";
 import { Request, Response } from "express";
 
