@@ -244,6 +244,19 @@ export default function AdminDashboard() {
       });
   }, []);
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      const token = localStorage.getItem("accessToken");
+      if (!token) {
+        window.location.href = "/admin-login";
+      }
+    }, 3000);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  },[]);
+
   console.log(requests);
 
   return (

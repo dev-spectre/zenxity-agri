@@ -24,6 +24,7 @@ landRequestRouter.post("/request", async (req: LandRequest, res: Response) => {
 
     // Validate input
     if (!landSize || !preferredLanguage || !landAddress) {
+      console.log(landSize, preferredLanguage, landAddress)
       return res.status(400).json({ message: "Missing required fields" });
     }
 
