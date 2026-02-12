@@ -161,8 +161,7 @@ export default function Index() {
             </div>
             <div>
               <iframe
-                width={1091 * 0.5}
-                height={616 * 0.5}
+                className="max-w-[545px] max-h-[308px] w-full aspect-video"
                 src="https://www.youtube.com/embed/r9dc0c3adfo"
                 title="Ideal Lands to Active Fields"
                 frameBorder="0"
