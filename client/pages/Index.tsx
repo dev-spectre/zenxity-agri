@@ -38,7 +38,7 @@ export default function Index() {
                 Turn Your Land Into Profitable Farmland
               </h1>
               <p className="text-lg text-muted-foreground mb-8">
-                Zenxity helps landowners transform unused agricultural land into productive farms. 
+                Zenxity helps landowners transform unused agricultural land into productive farms.
                 Our team manages the entire farming process while you track progress through real-time
                 updates, photos, and reports.
               </p>
@@ -81,23 +81,23 @@ export default function Index() {
             {[
               {
                 icon: Clock,
-                title: "Easy Booking",
-                desc: "Book farming services in minutes with our simple interface",
+                title: "Easy to Get Started",
+                desc: "Share your land details and our team takes care of the rest.",
               },
               {
                 icon: TrendingUp,
-                title: "Real-time Updates",
-                desc: "Get live photos and videos of your farming operations",
+                title: "Complete Transparency",
+                desc: "Track farming activities through real-time updates, photos, and reports.",
               },
               {
                 icon: Award,
-                title: "Professional Team",
-                desc: "Experienced farming professionals managing your land",
+                title: "Professional Management",
+                desc: "Experienced teams handle all farming operations efficiently.",
               },
               {
                 icon: Leaf,
-                title: "Transparent",
-                desc: "Complete transparency with detailed updates and comments",
+                title: "Better Use of Your Land",
+                desc: "Convert unused land into productive farmland.",
               },
             ].map((feature, i) => (
               <div key={i} className="text-center">
@@ -191,6 +191,7 @@ export default function Index() {
               </ul>
             </div>
           </div>
+          <iframe className="mt-10 w-full max-w-2xl aspect-video" src="https://www.youtube.com/embed/6bC1KxqYACY" title="Your Farmland Is Sitting Idle? Let It Work For You 🌱" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>
         </div>
       </section>
 
@@ -220,7 +221,7 @@ export default function Index() {
                 <img src="/logo-transparent.png" alt="" className="w-10 h-10" />
                 <span className="text-xl font-bold">Zenxity</span>
               </div>
-              <p className="text-white/70">Smart contract farming services</p>
+              <p className="text-white/70">Let Your Land Work for You.</p>
             </div>
             {/* <div>
               <h4 className="font-semibold mb-4">Quick Links</h4>
