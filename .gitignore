@@ -30,3 +30,5 @@ dist-ssr
 /zenxity
 
 *generated/prisma
+
+.next
