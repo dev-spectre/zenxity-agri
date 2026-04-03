@@ -17,8 +17,8 @@
 
 import * as runtime from "@prisma/client/runtime/index-browser"
 
-export type * from '../models.ts'
-export type * from './prismaNamespace.ts'
+export type * from '../models'
+export type * from './prismaNamespace'
 
 export const Decimal = runtime.Decimal
 
@@ -123,7 +123,12 @@ export const FarmingUpdatesScalarFieldEnum = {
   id: 'id',
   title: 'title',
   content: 'content',
+  description: 'description',
   img: 'img',
+  video: 'video',
+  landInfo: 'landInfo',
+  activityDate: 'activityDate',
+  activityTime: 'activityTime',
   requestId: 'requestId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'

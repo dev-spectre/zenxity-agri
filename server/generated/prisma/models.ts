@@ -8,8 +8,8 @@
  *
  * 🟢 You can import this file directly.
  */
-export type * from './models/User.ts'
-export type * from './models/Offer.ts'
-export type * from './models/FarmingRequest.ts'
-export type * from './models/FarmingUpdates.ts'
-export type * from './commonInputTypes.ts'
+export type * from './models/User'
+export type * from './models/Offer'
+export type * from './models/FarmingRequest'
+export type * from './models/FarmingUpdates'
+export type * from './commonInputTypes'

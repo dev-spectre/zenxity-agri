@@ -72,13 +72,18 @@ model FarmingRequest {
 }
 
 model FarmingUpdates {
-  id        String   @id @default(uuid())
-  title     String
-  content   String?
-  img       String?
-  requestId String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id           String   @id @default(uuid())
+  title        String
+  content      String?
+  description  String?
+  img          String?
+  video        String?
+  landInfo     String?  @map("land_info")
+  activityDate String?  @map("activity_date")
+  activityTime String?  @map("activity_time")
+  requestId    String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
   request FarmingRequest @relation(fields: [requestId], references: [id])
 }

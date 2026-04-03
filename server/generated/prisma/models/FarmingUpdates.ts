@@ -9,8 +9,8 @@
  * 🟢 You can import this file directly.
  */
 import type * as runtime from "@prisma/client/runtime/client"
-import type * as $Enums from "../enums.ts"
-import type * as Prisma from "../internal/prismaNamespace.ts"
+import type * as $Enums from "../enums"
+import type * as Prisma from "../internal/prismaNamespace"
 
 /**
  * Model FarmingUpdates
@@ -28,7 +28,12 @@ export type FarmingUpdatesMinAggregateOutputType = {
   id: string | null
   title: string | null
   content: string | null
+  description: string | null
   img: string | null
+  video: string | null
+  landInfo: string | null
+  activityDate: string | null
+  activityTime: string | null
   requestId: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -38,7 +43,12 @@ export type FarmingUpdatesMaxAggregateOutputType = {
   id: string | null
   title: string | null
   content: string | null
+  description: string | null
   img: string | null
+  video: string | null
+  landInfo: string | null
+  activityDate: string | null
+  activityTime: string | null
   requestId: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -48,7 +58,12 @@ export type FarmingUpdatesCountAggregateOutputType = {
   id: number
   title: number
   content: number
+  description: number
   img: number
+  video: number
+  landInfo: number
+  activityDate: number
+  activityTime: number
   requestId: number
   createdAt: number
   updatedAt: number
@@ -60,7 +75,12 @@ export type FarmingUpdatesMinAggregateInputType = {
   id?: true
   title?: true
   content?: true
+  description?: true
   img?: true
+  video?: true
+  landInfo?: true
+  activityDate?: true
+  activityTime?: true
   requestId?: true
   createdAt?: true
   updatedAt?: true
@@ -70,7 +90,12 @@ export type FarmingUpdatesMaxAggregateInputType = {
   id?: true
   title?: true
   content?: true
+  description?: true
   img?: true
+  video?: true
+  landInfo?: true
+  activityDate?: true
+  activityTime?: true
   requestId?: true
   createdAt?: true
   updatedAt?: true
@@ -80,7 +105,12 @@ export type FarmingUpdatesCountAggregateInputType = {
   id?: true
   title?: true
   content?: true
+  description?: true
   img?: true
+  video?: true
+  landInfo?: true
+  activityDate?: true
+  activityTime?: true
   requestId?: true
   createdAt?: true
   updatedAt?: true
@@ -163,7 +193,12 @@ export type FarmingUpdatesGroupByOutputType = {
   id: string
   title: string
   content: string | null
+  description: string | null
   img: string | null
+  video: string | null
+  landInfo: string | null
+  activityDate: string | null
+  activityTime: string | null
   requestId: string
   createdAt: Date
   updatedAt: Date
@@ -194,7 +229,12 @@ export type FarmingUpdatesWhereInput = {
   id?: Prisma.StringFilter<"FarmingUpdates"> | string
   title?: Prisma.StringFilter<"FarmingUpdates"> | string
   content?: Prisma.StringNullableFilter<"FarmingUpdates"> | string | null
+  description?: Prisma.StringNullableFilter<"FarmingUpdates"> | string | null
   img?: Prisma.StringNullableFilter<"FarmingUpdates"> | string | null
+  video?: Prisma.StringNullableFilter<"FarmingUpdates"> | string | null
+  landInfo?: Prisma.StringNullableFilter<"FarmingUpdates"> | string | null
+  activityDate?: Prisma.StringNullableFilter<"FarmingUpdates"> | string | null
+  activityTime?: Prisma.StringNullableFilter<"FarmingUpdates"> | string | null
   requestId?: Prisma.StringFilter<"FarmingUpdates"> | string
   createdAt?: Prisma.DateTimeFilter<"FarmingUpdates"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"FarmingUpdates"> | Date | string
@@ -205,7 +245,12 @@ export type FarmingUpdatesOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   content?: Prisma.SortOrderInput | Prisma.SortOrder
+  description?: Prisma.SortOrderInput | Prisma.SortOrder
   img?: Prisma.SortOrderInput | Prisma.SortOrder
+  video?: Prisma.SortOrderInput | Prisma.SortOrder
+  landInfo?: Prisma.SortOrderInput | Prisma.SortOrder
+  activityDate?: Prisma.SortOrderInput | Prisma.SortOrder
+  activityTime?: Prisma.SortOrderInput | Prisma.SortOrder
   requestId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -219,7 +264,12 @@ export type FarmingUpdatesWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.FarmingUpdatesWhereInput | Prisma.FarmingUpdatesWhereInput[]
   title?: Prisma.StringFilter<"FarmingUpdates"> | string
   content?: Prisma.StringNullableFilter<"FarmingUpdates"> | string | null
+  description?: Prisma.StringNullableFilter<"FarmingUpdates"> | string | null
   img?: Prisma.StringNullableFilter<"FarmingUpdates"> | string | null
+  video?: Prisma.StringNullableFilter<"FarmingUpdates"> | string | null
+  landInfo?: Prisma.StringNullableFilter<"FarmingUpdates"> | string | null
+  activityDate?: Prisma.StringNullableFilter<"FarmingUpdates"> | string | null
+  activityTime?: Prisma.StringNullableFilter<"FarmingUpdates"> | string | null
   requestId?: Prisma.StringFilter<"FarmingUpdates"> | string
   createdAt?: Prisma.DateTimeFilter<"FarmingUpdates"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"FarmingUpdates"> | Date | string
@@ -230,7 +280,12 @@ export type FarmingUpdatesOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   content?: Prisma.SortOrderInput | Prisma.SortOrder
+  description?: Prisma.SortOrderInput | Prisma.SortOrder
   img?: Prisma.SortOrderInput | Prisma.SortOrder
+  video?: Prisma.SortOrderInput | Prisma.SortOrder
+  landInfo?: Prisma.SortOrderInput | Prisma.SortOrder
+  activityDate?: Prisma.SortOrderInput | Prisma.SortOrder
+  activityTime?: Prisma.SortOrderInput | Prisma.SortOrder
   requestId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -246,7 +301,12 @@ export type FarmingUpdatesScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"FarmingUpdates"> | string
   title?: Prisma.StringWithAggregatesFilter<"FarmingUpdates"> | string
   content?: Prisma.StringNullableWithAggregatesFilter<"FarmingUpdates"> | string | null
+  description?: Prisma.StringNullableWithAggregatesFilter<"FarmingUpdates"> | string | null
   img?: Prisma.StringNullableWithAggregatesFilter<"FarmingUpdates"> | string | null
+  video?: Prisma.StringNullableWithAggregatesFilter<"FarmingUpdates"> | string | null
+  landInfo?: Prisma.StringNullableWithAggregatesFilter<"FarmingUpdates"> | string | null
+  activityDate?: Prisma.StringNullableWithAggregatesFilter<"FarmingUpdates"> | string | null
+  activityTime?: Prisma.StringNullableWithAggregatesFilter<"FarmingUpdates"> | string | null
   requestId?: Prisma.StringWithAggregatesFilter<"FarmingUpdates"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"FarmingUpdates"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"FarmingUpdates"> | Date | string
@@ -256,7 +316,12 @@ export type FarmingUpdatesCreateInput = {
   id?: string
   title: string
   content?: string | null
+  description?: string | null
   img?: string | null
+  video?: string | null
+  landInfo?: string | null
+  activityDate?: string | null
+  activityTime?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   request: Prisma.FarmingRequestCreateNestedOneWithoutUpdatesInput
@@ -266,7 +331,12 @@ export type FarmingUpdatesUncheckedCreateInput = {
   id?: string
   title: string
   content?: string | null
+  description?: string | null
   img?: string | null
+  video?: string | null
+  landInfo?: string | null
+  activityDate?: string | null
+  activityTime?: string | null
   requestId: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -276,7 +346,12 @@ export type FarmingUpdatesUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   img?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  video?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  landInfo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  activityDate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  activityTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   request?: Prisma.FarmingRequestUpdateOneRequiredWithoutUpdatesNestedInput
@@ -286,7 +361,12 @@ export type FarmingUpdatesUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   img?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  video?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  landInfo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  activityDate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  activityTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   requestId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -296,7 +376,12 @@ export type FarmingUpdatesCreateManyInput = {
   id?: string
   title: string
   content?: string | null
+  description?: string | null
   img?: string | null
+  video?: string | null
+  landInfo?: string | null
+  activityDate?: string | null
+  activityTime?: string | null
   requestId: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -306,7 +391,12 @@ export type FarmingUpdatesUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   img?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  video?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  landInfo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  activityDate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  activityTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -315,7 +405,12 @@ export type FarmingUpdatesUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   img?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  video?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  landInfo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  activityDate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  activityTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   requestId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -335,7 +430,12 @@ export type FarmingUpdatesCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   content?: Prisma.SortOrder
+  description?: Prisma.SortOrder
   img?: Prisma.SortOrder
+  video?: Prisma.SortOrder
+  landInfo?: Prisma.SortOrder
+  activityDate?: Prisma.SortOrder
+  activityTime?: Prisma.SortOrder
   requestId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -345,7 +445,12 @@ export type FarmingUpdatesMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   content?: Prisma.SortOrder
+  description?: Prisma.SortOrder
   img?: Prisma.SortOrder
+  video?: Prisma.SortOrder
+  landInfo?: Prisma.SortOrder
+  activityDate?: Prisma.SortOrder
+  activityTime?: Prisma.SortOrder
   requestId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -355,7 +460,12 @@ export type FarmingUpdatesMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   content?: Prisma.SortOrder
+  description?: Prisma.SortOrder
   img?: Prisma.SortOrder
+  video?: Prisma.SortOrder
+  landInfo?: Prisma.SortOrder
+  activityDate?: Prisma.SortOrder
+  activityTime?: Prisma.SortOrder
   requestId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -407,7 +517,12 @@ export type FarmingUpdatesCreateWithoutRequestInput = {
   id?: string
   title: string
   content?: string | null
+  description?: string | null
   img?: string | null
+  video?: string | null
+  landInfo?: string | null
+  activityDate?: string | null
+  activityTime?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -416,7 +531,12 @@ export type FarmingUpdatesUncheckedCreateWithoutRequestInput = {
   id?: string
   title: string
   content?: string | null
+  description?: string | null
   img?: string | null
+  video?: string | null
+  landInfo?: string | null
+  activityDate?: string | null
+  activityTime?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -454,7 +574,12 @@ export type FarmingUpdatesScalarWhereInput = {
   id?: Prisma.StringFilter<"FarmingUpdates"> | string
   title?: Prisma.StringFilter<"FarmingUpdates"> | string
   content?: Prisma.StringNullableFilter<"FarmingUpdates"> | string | null
+  description?: Prisma.StringNullableFilter<"FarmingUpdates"> | string | null
   img?: Prisma.StringNullableFilter<"FarmingUpdates"> | string | null
+  video?: Prisma.StringNullableFilter<"FarmingUpdates"> | string | null
+  landInfo?: Prisma.StringNullableFilter<"FarmingUpdates"> | string | null
+  activityDate?: Prisma.StringNullableFilter<"FarmingUpdates"> | string | null
+  activityTime?: Prisma.StringNullableFilter<"FarmingUpdates"> | string | null
   requestId?: Prisma.StringFilter<"FarmingUpdates"> | string
   createdAt?: Prisma.DateTimeFilter<"FarmingUpdates"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"FarmingUpdates"> | Date | string
@@ -464,7 +589,12 @@ export type FarmingUpdatesCreateManyRequestInput = {
   id?: string
   title: string
   content?: string | null
+  description?: string | null
   img?: string | null
+  video?: string | null
+  landInfo?: string | null
+  activityDate?: string | null
+  activityTime?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -473,7 +603,12 @@ export type FarmingUpdatesUpdateWithoutRequestInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   img?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  video?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  landInfo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  activityDate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  activityTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -482,7 +617,12 @@ export type FarmingUpdatesUncheckedUpdateWithoutRequestInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   img?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  video?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  landInfo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  activityDate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  activityTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -491,7 +631,12 @@ export type FarmingUpdatesUncheckedUpdateManyWithoutRequestInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   img?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  video?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  landInfo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  activityDate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  activityTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -502,7 +647,12 @@ export type FarmingUpdatesSelect<ExtArgs extends runtime.Types.Extensions.Intern
   id?: boolean
   title?: boolean
   content?: boolean
+  description?: boolean
   img?: boolean
+  video?: boolean
+  landInfo?: boolean
+  activityDate?: boolean
+  activityTime?: boolean
   requestId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -513,7 +663,12 @@ export type FarmingUpdatesSelectCreateManyAndReturn<ExtArgs extends runtime.Type
   id?: boolean
   title?: boolean
   content?: boolean
+  description?: boolean
   img?: boolean
+  video?: boolean
+  landInfo?: boolean
+  activityDate?: boolean
+  activityTime?: boolean
   requestId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -524,7 +679,12 @@ export type FarmingUpdatesSelectUpdateManyAndReturn<ExtArgs extends runtime.Type
   id?: boolean
   title?: boolean
   content?: boolean
+  description?: boolean
   img?: boolean
+  video?: boolean
+  landInfo?: boolean
+  activityDate?: boolean
+  activityTime?: boolean
   requestId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -535,13 +695,18 @@ export type FarmingUpdatesSelectScalar = {
   id?: boolean
   title?: boolean
   content?: boolean
+  description?: boolean
   img?: boolean
+  video?: boolean
+  landInfo?: boolean
+  activityDate?: boolean
+  activityTime?: boolean
   requestId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type FarmingUpdatesOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "content" | "img" | "requestId" | "createdAt" | "updatedAt", ExtArgs["result"]["farmingUpdates"]>
+export type FarmingUpdatesOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "content" | "description" | "img" | "video" | "landInfo" | "activityDate" | "activityTime" | "requestId" | "createdAt" | "updatedAt", ExtArgs["result"]["farmingUpdates"]>
 export type FarmingUpdatesInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   request?: boolean | Prisma.FarmingRequestDefaultArgs<ExtArgs>
 }
@@ -561,7 +726,12 @@ export type $FarmingUpdatesPayload<ExtArgs extends runtime.Types.Extensions.Inte
     id: string
     title: string
     content: string | null
+    description: string | null
     img: string | null
+    video: string | null
+    landInfo: string | null
+    activityDate: string | null
+    activityTime: string | null
     requestId: string
     createdAt: Date
     updatedAt: Date
@@ -992,7 +1162,12 @@ export interface FarmingUpdatesFieldRefs {
   readonly id: Prisma.FieldRef<"FarmingUpdates", 'String'>
   readonly title: Prisma.FieldRef<"FarmingUpdates", 'String'>
   readonly content: Prisma.FieldRef<"FarmingUpdates", 'String'>
+  readonly description: Prisma.FieldRef<"FarmingUpdates", 'String'>
   readonly img: Prisma.FieldRef<"FarmingUpdates", 'String'>
+  readonly video: Prisma.FieldRef<"FarmingUpdates", 'String'>
+  readonly landInfo: Prisma.FieldRef<"FarmingUpdates", 'String'>
+  readonly activityDate: Prisma.FieldRef<"FarmingUpdates", 'String'>
+  readonly activityTime: Prisma.FieldRef<"FarmingUpdates", 'String'>
   readonly requestId: Prisma.FieldRef<"FarmingUpdates", 'String'>
   readonly createdAt: Prisma.FieldRef<"FarmingUpdates", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"FarmingUpdates", 'DateTime'>
