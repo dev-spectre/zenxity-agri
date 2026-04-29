@@ -57,7 +57,7 @@ export function Navbar() {
         isHomePage
           ? cn(
             "fixed top-0 left-0 right-0 backdrop-blur-md",
-            isScrolled ? "bg-white text-foreground shadow-md" : "bg-transparent text-white"
+            isScrolled ? "bg-white text-foreground shadow-md" : "bg-white/10 text-white"
           )
           : "sticky top-0 bg-white text-foreground shadow-sm border-b border-border"
       )}
@@ -171,7 +171,7 @@ export function Navbar() {
         <div
           className={cn(
             "md:hidden absolute top-16 left-0 right-0 border-b shadow-lg py-4 px-4 space-y-4 backdrop-blur-lg z-50 transition-colors duration-500",
-            (isHomePage && !isScrolled) ? "bg-green-950/95 text-white border-white/10" : "bg-white text-foreground border-border"
+            (isHomePage && !isScrolled) ? "bg-white/10 backdrop-blur-xl border-white/10 text-white" : "bg-white text-foreground border-border"
           )}
         >
           {navLinks.map((link) => (

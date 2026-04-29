@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 export default function SupportPage() {
   return (
     <div className="p-4 sm:p-6 lg:p-8 space-y-8 max-w-3xl mx-auto">
-      <div className="text-center mb-10">
+      <div className="lg:text-center mb-10">
         <h1 className="text-3xl font-bold text-foreground mb-4">{t("How can we help you?")}</h1>
         <p className="text-muted-foreground text-lg">{t("Reach out to the Zenxity support team for any queries regarding your land, projects, or earnings.")}</p>
       </div>
