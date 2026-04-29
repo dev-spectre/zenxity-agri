@@ -8,6 +8,7 @@ import { UploadCloud, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useTranslation } from "@/hooks/useTranslation";
+import { cn } from "@/lib/utils";
 
 export function DocumentUploadForm({ requestId }: { requestId?: string }) {
   const { t } = useTranslation();
@@ -20,6 +21,11 @@ export function DocumentUploadForm({ requestId }: { requestId?: string }) {
     e.preventDefault();
     if (!file || !name) {
       toast.error(t("Please provide both a document name and a file"));
+      return;
+    }
+
+    if (file.size > 20 * 1024 * 1024) {
+      toast.error(t("File size must be less than 20MB"));
       return;
     }
 
@@ -54,37 +60,75 @@ export function DocumentUploadForm({ requestId }: { requestId?: string }) {
   };
 
   return (
-    <form onSubmit={handleUpload} className="border rounded-lg p-4 bg-white space-y-4 shadow-sm">
-      <h3 className="font-bold text-foreground text-sm mb-2">{t("Upload New Document")}</h3>
+    <form onSubmit={handleUpload} className="form-container !p-6 space-y-5">
+      <div className="flex items-center gap-2 border-b border-gray-100 pb-3 mb-4">
+        <div className="p-2 bg-green-50 rounded-lg">
+          <UploadCloud className="w-5 h-5 text-green-600" />
+        </div>
+        <h3 className="font-bold text-foreground text-lg">{t("Upload New Document")}</h3>
+      </div>
       
-      <div className="space-y-1">
-        <Label htmlFor="doc-name" className="text-xs text-muted-foreground">{t("Document Name")}</Label>
+      <div className="space-y-2">
+        <Label htmlFor="doc-name" className="premium-label">{t("Document Name")}</Label>
         <Input 
           id="doc-name" 
           type="text" 
           placeholder={t("e.g. Aadhaar Card, Land Patta")} 
           value={name} 
           onChange={(e) => setName(e.target.value)}
-          className="h-8 text-sm"
           required 
         />
       </div>
 
-      <div className="space-y-1">
-        <Label htmlFor="doc-file" className="text-xs text-muted-foreground">{t("Select File")}</Label>
-        <Input 
-          id="doc-file" 
-          type="file" 
-          accept=".pdf,.jpg,.jpeg,.png" 
-          onChange={(e) => setFile(e.target.files?.[0] || null)}
-          className="h-9 text-xs"
-          required 
-        />
+      <div className="space-y-2">
+        <Label className="premium-label">{t("Select File")}</Label>
+        <div 
+          className={cn(
+            "relative group cursor-pointer transition-all duration-300",
+            "border-2 border-dashed border-gray-200 rounded-2xl bg-gray-50/50 p-8 text-center",
+            "hover:border-green-600/50 hover:bg-green-50/30",
+            file ? "border-green-600/50 bg-green-50/30" : ""
+          )}
+          onClick={() => document.getElementById("doc-file")?.click()}
+        >
+          <input 
+            id="doc-file" 
+            type="file" 
+            accept=".pdf,.jpg,.jpeg,.png" 
+            onChange={(e) => setFile(e.target.files?.[0] || null)}
+            className="hidden"
+            required 
+          />
+          
+          <div className="flex flex-col items-center justify-center gap-3">
+            <div className={cn(
+              "p-4 rounded-full bg-white shadow-sm transition-transform duration-300 group-hover:scale-110",
+              file ? "text-green-600" : "text-gray-400"
+            )}>
+              <UploadCloud className="w-8 h-8" />
+            </div>
+            
+            <div className="space-y-1">
+              <p className="font-semibold text-foreground">
+                {file ? file.name : t("Click to upload or drag and drop")}
+              </p>
+              <p className="text-xs text-muted-foreground">
+                {t("Supported formats: PDF, JPG, PNG (Max 20MB)")}
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <Button type="submit" size="sm" className="w-full gap-2" disabled={loading}>
-        {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <UploadCloud className="w-4 h-4" />}
-        {t("Upload")}
+      <Button type="submit" className="w-full h-12 text-base font-semibold shadow-lg shadow-green-600/20" disabled={loading}>
+        {loading ? (
+          <Loader2 className="w-5 h-5 animate-spin" />
+        ) : (
+          <div className="flex items-center gap-2">
+            <UploadCloud className="w-5 h-5" />
+            {t("Upload Document")}
+          </div>
+        )}
       </Button>
     </form>
   );

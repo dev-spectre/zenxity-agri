@@ -20,6 +20,11 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ message: "Missing file or document name" }, { status: 400 });
     }
 
+    // Server-side size check (20MB)
+    if (file.size > 20 * 1024 * 1024) {
+      return NextResponse.json({ message: "File size too large (max 20MB)" }, { status: 400 });
+    }
+
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 

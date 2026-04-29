@@ -66,7 +66,7 @@ export default function AddLandPage() {
         <p className="text-muted-foreground text-sm">{t("Provide details about your land for farming assessment.")}</p>
       </div>
 
-      <form onSubmit={handleSubmit} className="bg-white rounded-xl border p-6 space-y-6 shadow-sm">
+      <form onSubmit={handleSubmit} className="bg-white rounded-3xl shadow-xl shadow-gray-200/50 border border-gray-100 p-8 space-y-6">
         <div className="space-y-2">
           <Label htmlFor="landSize" className="text-foreground font-semibold">
             {t("Land Size (Acres)")} <span className="text-red-500">*</span>

@@ -417,8 +417,8 @@ export default function Home() {
               <ul className="space-y-3 text-zinc-400">
                 <li><a href="#" className="hover:text-green-400 transition-colors">Help Center</a></li>
                 <li><a href="#contact" className="hover:text-green-400 transition-colors">Contact Us</a></li>
-                <li><a href="#" className="hover:text-green-400 transition-colors">Privacy Policy</a></li>
-                <li><a href="#" className="hover:text-green-400 transition-colors">Terms of Service</a></li>
+                <li><Link href="/privacy" className="hover:text-green-400 transition-colors">Privacy Policy</Link></li>
+                <li><Link href="/terms" className="hover:text-green-400 transition-colors">Terms of Service</Link></li>
               </ul>
             </div>
             <div>

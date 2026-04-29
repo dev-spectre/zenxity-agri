@@ -107,6 +107,25 @@
     @apply bg-background text-foreground;
   }
 
+  /* Global Form Styling */
+  .form-container {
+    @apply bg-white rounded-3xl shadow-xl shadow-gray-200/50 border border-gray-100 p-8;
+  }
+
+  .premium-input {
+    @apply w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-green-600/50 focus:border-green-600 text-base transition-colors !important;
+  }
+
+  .premium-label {
+    @apply block text-sm font-semibold text-foreground mb-1.5 !important;
+  }
+
+  /* Style all form elements to match the premium theme by default where appropriate */
+  textarea:not(.compact), 
+  select:not(.compact) {
+    @apply premium-input;
+  }
+
   :where(p, span, li, h1, h2, h3, h4, h5, h6, a, button, label, td, th) {
     overflow-wrap: anywhere;
     word-break: break-word;
@@ -116,5 +135,16 @@
   code {
     overflow-x: auto;
     white-space: pre;
+  }
+
+  /* Remove number spinners from all inputs */
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  input[type=number] {
+    -moz-appearance: textfield;
   }
 }

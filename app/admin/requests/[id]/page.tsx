@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { toast } from "sonner";
+import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -23,6 +24,8 @@ import {
   Plus,
   LayoutDashboard
 } from "lucide-react";
+
+const t = (key: string) => key;
 
 export default function AdminProjectDetail() {
   const params = useParams();
@@ -106,6 +109,20 @@ export default function AdminProjectDetail() {
   const handleUploadUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!uploadData.title) return;
+
+    // Size check (20MB)
+    const MAX_SIZE = 20 * 1024 * 1024;
+    for (const file of selectedImageFiles) {
+      if (file.size > MAX_SIZE) {
+        toast.error(`Image ${file.name} is too large (max 20MB)`);
+        return;
+      }
+    }
+    if (selectedVideoFile && selectedVideoFile.size > MAX_SIZE) {
+      toast.error(`Video ${selectedVideoFile.name} is too large (max 20MB)`);
+      return;
+    }
+
     setUploading(true);
     try {
       let imgUrl = "";
@@ -316,23 +333,31 @@ export default function AdminProjectDetail() {
                 <textarea placeholder="Detail your activity..." className="w-full px-3 py-2 border border-border rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-primary resize-none" rows={2} value={uploadData.description} onChange={(e) => setUploadData({ ...uploadData, description: e.target.value })} />
               </div>
               
-              <div className="grid grid-cols-2 gap-2">
-                <div className="p-3 border border-dashed border-border rounded bg-white text-center cursor-pointer">
+              <div className="grid grid-cols-2 gap-3">
+                <div 
+                  className={cn(
+                    "p-4 border-2 border-dashed rounded-xl text-center cursor-pointer transition-all duration-200",
+                    selectedImageFiles.length > 0 ? "bg-green-50 border-green-600/30" : "bg-white border-gray-200 hover:border-primary/50 hover:bg-primary/5"
+                  )}
+                  onClick={() => document.getElementById("page-image")?.click()}
+                >
                   <input type="file" accept="image/*" className="hidden" id="page-image" onChange={(e) => setSelectedImageFiles(Array.from(e.target.files || []))} />
-                  <label htmlFor="page-image" className="cursor-pointer">
-                    <ImageIcon className="w-4 h-4 text-primary mx-auto mb-1" />
-                    <p className="text-[10px] font-medium text-foreground">Photo</p>
-                  </label>
-                  {selectedImageFiles.length > 0 && <p className="text-[9px] text-green-600 truncate mt-1">✓ {selectedImageFiles[0].name}</p>}
+                  <ImageIcon className={cn("w-6 h-6 mx-auto mb-2", selectedImageFiles.length > 0 ? "text-green-600" : "text-primary")} />
+                  <p className="text-[11px] font-bold text-foreground">{selectedImageFiles.length > 0 ? t("Photo Selected") : t("Add Photo")}</p>
+                  {selectedImageFiles.length > 0 && <p className="text-[10px] text-green-700 truncate mt-1 px-1">{selectedImageFiles[0].name}</p>}
                 </div>
 
-                <div className="p-3 border border-dashed border-border rounded bg-white text-center cursor-pointer">
+                <div 
+                  className={cn(
+                    "p-4 border-2 border-dashed rounded-xl text-center cursor-pointer transition-all duration-200",
+                    selectedVideoFile ? "bg-green-50 border-green-600/30" : "bg-white border-gray-200 hover:border-primary/50 hover:bg-primary/5"
+                  )}
+                  onClick={() => document.getElementById("page-video")?.click()}
+                >
                   <input type="file" accept="video/*" className="hidden" id="page-video" onChange={(e) => setSelectedVideoFile(e.target.files?.[0] || null)} />
-                  <label htmlFor="page-video" className="cursor-pointer">
-                    <VideoIcon className="w-4 h-4 text-primary mx-auto mb-1" />
-                    <p className="text-[10px] font-medium text-foreground">Video</p>
-                  </label>
-                  {selectedVideoFile && <p className="text-[9px] text-green-600 truncate mt-1">✓ {selectedVideoFile.name}</p>}
+                  <VideoIcon className={cn("w-6 h-6 mx-auto mb-2", selectedVideoFile ? "text-green-600" : "text-primary")} />
+                  <p className="text-[11px] font-bold text-foreground">{selectedVideoFile ? t("Video Selected") : t("Add Video")}</p>
+                  {selectedVideoFile && <p className="text-[10px] text-green-700 truncate mt-1 px-1">{selectedVideoFile.name}</p>}
                 </div>
               </div>
 

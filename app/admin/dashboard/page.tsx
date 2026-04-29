@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { cn } from "@/lib/utils";
 
 const t = (key: string) => key;
 import { Input } from "@/components/ui/input";
@@ -25,8 +26,8 @@ import {
   XCircle,
   Clock,
   Plus,
-  Image,
-  Video,
+  Image as ImageIcon,
+  Video as VideoIcon,
   MapPin,
   Calendar,
   Timer,
@@ -34,7 +35,6 @@ import {
   Eye,
   IndianRupee,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -181,6 +181,20 @@ export default function AdminDashboard() {
   const handleUploadUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!uploadData.requestId || !uploadData.title) return;
+
+    // Size check (20MB)
+    const MAX_SIZE = 20 * 1024 * 1024;
+    for (const file of selectedImageFiles) {
+      if (file.size > MAX_SIZE) {
+        toast.error(`Image ${file.name} is too large (max 20MB)`);
+        return;
+      }
+    }
+    if (selectedVideoFile && selectedVideoFile.size > MAX_SIZE) {
+      toast.error(`Video ${selectedVideoFile.name} is too large (max 20MB)`);
+      return;
+    }
+
     setUploading(true);
     try {
       let imgUrl = "";
@@ -296,12 +310,14 @@ export default function AdminDashboard() {
             })}
           </nav>
           <div className="border-t border-border p-4">
-            <button onClick={() => signOut({ callbackUrl: '/' })} className="w-full">
-              <Button variant="ghost" className="w-full justify-start gap-2 text-red-600 hover:bg-red-50">
-                <LogOut className="w-5 h-5" />
-                <span>Logout</span>
-              </Button>
-            </button>
+            <Button 
+              variant="ghost" 
+              className="w-full justify-start gap-2 text-red-600 hover:bg-red-50"
+              onClick={() => signOut({ callbackUrl: '/' })}
+            >
+              <LogOut className="w-5 h-5" />
+              <span>Logout</span>
+            </Button>
           </div>
         </div>
       </aside>
@@ -745,13 +761,13 @@ export default function AdminDashboard() {
           {activeSection === "uploads" && (
             <div className="space-y-6">
               <h2 className="text-2xl font-bold text-foreground">Post Farming Updates</h2>
-              <div className="bg-white rounded-lg border border-border p-8">
+              <div className="bg-white rounded-3xl border border-border p-8">
                 <p className="text-muted-foreground mb-6">Post rich updates with photos, videos, and details for accepted farming requests.</p>
                 {acceptedRequests.length > 0 ? (
-                  <form onSubmit={handleUploadUpdate} className="space-y-6">
+                  <form onSubmit={handleUploadUpdate} className="form-container !p-6 space-y-4 bg-gray-50 border-dashed">
                     <div>
-                      <Label className="text-foreground font-semibold mb-2">Select Request / User</Label>
-                      <select value={uploadData.requestId} onChange={(e) => setUploadData({ ...uploadData, requestId: e.target.value })} className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" required>
+                      <Label className="premium-label">Select Request / User</Label>
+                      <select value={uploadData.requestId} onChange={(e) => setUploadData({ ...uploadData, requestId: e.target.value })} className="premium-input w-full" required>
                         <option value="">-- Choose a request --</option>
                         {acceptedRequests.map((req) => (<option className="text-black" key={req.id} value={req.id}>{`${req.user?.name} | ${req.landAddress} | ${req.landSize} Acres`}</option>))}
                       </select>
@@ -766,27 +782,49 @@ export default function AdminDashboard() {
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
-                        <Label className="text-foreground font-semibold mb-2 flex items-center gap-2"><Image className="w-4 h-4" />Upload Photo</Label>
-                        <div className="border-2 border-dashed border-border rounded-lg p-6 text-center cursor-pointer hover:bg-gray-50 transition">
+                        <Label className="premium-label flex items-center gap-2"><ImageIcon className="w-4 h-4" />Upload Photo</Label>
+                        <div 
+                          className={cn(
+                            "border-2 border-dashed rounded-2xl p-8 text-center cursor-pointer transition-all duration-300",
+                            selectedImageFiles.length > 0 ? "bg-green-50 border-green-600/30" : "bg-gray-50 border-gray-200 hover:border-primary/50 hover:bg-primary/5"
+                          )}
+                          onClick={() => document.getElementById("image-upload")?.click()}
+                        >
                           <input type="file" accept="image/*" onChange={(e) => setSelectedImageFiles(Array.from(e.target.files || []))} className="hidden" id="image-upload" />
-                          <label htmlFor="image-upload" className="cursor-pointer">
-                            <Image className="w-10 h-10 text-primary mx-auto mb-2" />
-                            <p className="text-foreground font-medium text-sm">Click to upload photo</p>
-                            <p className="text-muted-foreground text-xs">PNG, JPG up to 10MB</p>
-                          </label>
-                          {selectedImageFiles.length > 0 && <div className="mt-3 text-left"><p className="text-xs font-semibold text-green-600">{selectedImageFiles.length} photo(s) selected:</p><ul className="text-xs text-foreground">{selectedImageFiles.map((file) => <li key={file.name}>✓ {file.name}</li>)}</ul></div>}
+                          <div className="flex flex-col items-center gap-2">
+                            <ImageIcon className={cn("w-10 h-10", selectedImageFiles.length > 0 ? "text-green-600" : "text-gray-400")} />
+                            <p className="text-foreground font-bold text-sm">{selectedImageFiles.length > 0 ? t("Photos Selected") : t("Click to upload photo")}</p>
+                            <p className="text-muted-foreground text-xs">{t("PNG, JPG up to 20MB")}</p>
+                          </div>
+                          {selectedImageFiles.length > 0 && (
+                            <div className="mt-4 pt-4 border-t border-green-600/10 text-left">
+                              <ul className="text-xs text-green-700 space-y-1">
+                                {selectedImageFiles.map((file) => <li key={file.name} className="flex items-center gap-1"><CheckCircle className="w-3 h-3" /> {file.name}</li>)}
+                              </ul>
+                            </div>
+                          )}
                         </div>
                       </div>
                       <div>
-                        <Label className="text-foreground font-semibold mb-2 flex items-center gap-2"><Video className="w-4 h-4" />Upload Video</Label>
-                        <div className="border-2 border-dashed border-border rounded-lg p-6 text-center cursor-pointer hover:bg-gray-50 transition">
+                        <Label className="premium-label flex items-center gap-2"><VideoIcon className="w-4 h-4" />Upload Video</Label>
+                        <div 
+                          className={cn(
+                            "border-2 border-dashed rounded-2xl p-8 text-center cursor-pointer transition-all duration-300",
+                            selectedVideoFile ? "bg-green-50 border-green-600/30" : "bg-gray-50 border-gray-200 hover:border-primary/50 hover:bg-primary/5"
+                          )}
+                          onClick={() => document.getElementById("video-upload")?.click()}
+                        >
                           <input type="file" accept="video/*" onChange={(e) => setSelectedVideoFile(e.target.files?.[0] || null)} className="hidden" id="video-upload" />
-                          <label htmlFor="video-upload" className="cursor-pointer">
-                            <Video className="w-10 h-10 text-primary mx-auto mb-2" />
-                            <p className="text-foreground font-medium text-sm">Click to upload video</p>
-                            <p className="text-muted-foreground text-xs">MP4, MOV up to 100MB</p>
-                          </label>
-                          {selectedVideoFile && <div className="mt-3 text-left"><p className="text-xs font-semibold text-green-600">Video selected:</p><p className="text-xs text-foreground">✓ {selectedVideoFile.name}</p></div>}
+                          <div className="flex flex-col items-center gap-2">
+                            <VideoIcon className={cn("w-10 h-10", selectedVideoFile ? "text-green-600" : "text-gray-400")} />
+                            <p className="text-foreground font-bold text-sm">{selectedVideoFile ? t("Video Selected") : t("Click to upload video")}</p>
+                            <p className="text-muted-foreground text-xs">{t("MP4, MOV up to 20MB")}</p>
+                          </div>
+                          {selectedVideoFile && (
+                            <div className="mt-4 pt-4 border-t border-green-600/10 text-left">
+                              <p className="text-xs text-green-700 flex items-center gap-1"><CheckCircle className="w-3 h-3" /> {selectedVideoFile.name}</p>
+                            </div>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -852,13 +890,13 @@ export default function AdminDashboard() {
                 <Button onClick={() => setShowAddOfferForm(!showAddOfferForm)} className="gap-2"><Plus className="w-4 h-4" />Add Offer</Button>
               </div>
               {showAddOfferForm && (
-                <div className="bg-white rounded-lg border border-border p-8">
+                <div className="form-container">
                   <h3 className="text-lg font-bold text-foreground mb-6">Create New Offer</h3>
                   <form onSubmit={handleAddOffer} className="space-y-4">
-                    <div><Label className="text-foreground font-semibold mb-2">Offer Title</Label><Input type="text" placeholder="e.g., Plowing & Tilling" value={newOffer.title} onChange={(e) => setNewOffer({ ...newOffer, title: e.target.value })} required /></div>
-                    <div><Label className="text-foreground font-semibold mb-2">Description</Label><textarea placeholder="Describe the offer..." className="w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary resize-none" rows={3} value={newOffer.description} onChange={(e) => setNewOffer({ ...newOffer, description: e.target.value })} required /></div>
-                    <div><Label className="text-foreground font-semibold mb-2">Validity Period</Label><Input type="text" placeholder="e.g., Valid till Mar 31" value={newOffer.validity} onChange={(e) => setNewOffer({ ...newOffer, validity: e.target.value })} /></div>
-                    <div><Label className="text-foreground font-semibold mb-2">Background Image</Label><Input type="text" placeholder="e.g., https://cloudinary.com/image.jpg" value={newOffer.img} onChange={(e) => setNewOffer({ ...newOffer, img: e.target.value })} /></div>
+                    <div><Label className="premium-label">Offer Title</Label><Input type="text" placeholder="e.g., Plowing & Tilling" value={newOffer.title} onChange={(e) => setNewOffer({ ...newOffer, title: e.target.value })} required /></div>
+                    <div><Label className="premium-label">Description</Label><textarea placeholder="Describe the offer..." className="premium-input" rows={3} value={newOffer.description} onChange={(e) => setNewOffer({ ...newOffer, description: e.target.value })} required /></div>
+                    <div><Label className="premium-label">Validity Period</Label><Input type="text" placeholder="e.g., Valid till Mar 31" value={newOffer.validity} onChange={(e) => setNewOffer({ ...newOffer, validity: e.target.value })} /></div>
+                    <div><Label className="premium-label">Background Image</Label><Input type="text" placeholder="e.g., https://cloudinary.com/image.jpg" value={newOffer.img} onChange={(e) => setNewOffer({ ...newOffer, img: e.target.value })} /></div>
                     <div className="flex gap-4"><Button type="submit">Save Offer</Button><Button type="button" variant="outline" onClick={() => { setShowAddOfferForm(false); setNewOffer({ title: "", description: "", validity: "", img: "" }); }}>Cancel</Button></div>
                   </form>
                 </div>
@@ -884,15 +922,15 @@ export default function AdminDashboard() {
           {activeSection === "financials" && (
             <div className="space-y-6">
               <h2 className="text-2xl font-bold text-foreground">Manage Financial Breakdown</h2>
-              <div className="bg-white rounded-lg border border-border p-8 max-w-xl">
+              <div className="form-container max-w-xl">
                 <p className="text-muted-foreground mb-6">Add a new financial record for a user's earnings breakdown.</p>
                 <form onSubmit={handleAddFinancial} className="space-y-4">
                   <div>
-                    <Label className="text-foreground font-semibold mb-2">Select User</Label>
+                    <Label className="premium-label">Select User</Label>
                     <select
                       value={financialData.userId}
                       onChange={(e) => setFinancialData({ ...financialData, userId: e.target.value })}
-                      className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-black"
+                      className="premium-input text-black"
                       required
                     >
                       <option value="">-- Choose a User --</option>
@@ -905,7 +943,7 @@ export default function AdminDashboard() {
                     </select>
                   </div>
                   <div>
-                    <Label className="text-foreground font-semibold mb-2 flex items-center gap-2">Description</Label>
+                    <Label className="premium-label">Description</Label>
                     <Input
                       type="text"
                       placeholder="e.g., Organic Carrot Harvest Profit"
