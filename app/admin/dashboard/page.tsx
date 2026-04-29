@@ -11,6 +11,8 @@ const t = (key: string) => key;
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
+  Menu,
+  X,
   LogOut,
   LayoutDashboard,
   Clipboard,
@@ -32,6 +34,7 @@ import {
   Eye,
   IndianRupee,
 } from "lucide-react";
+import { cn } from "@/lib/utils";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -70,6 +73,7 @@ interface FarmingUpdate {
 
 export default function AdminDashboard() {
   const [activeSection, setActiveSection] = useState("dashboard");
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [requests, setRequests] = useState<any[]>([]);
   const [offers, setOffers] = useState<Offer[]>([]);
   const [newOffer, setNewOffer] = useState({ title: "", description: "", validity: "", img: "" });
@@ -246,23 +250,47 @@ export default function AdminDashboard() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-background flex">
+    <div className="min-h-screen bg-background flex flex-col md:flex-row">
+      {/* Mobile Backdrop */}
+      {isSidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 z-40 md:hidden"
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
+
       {/* Sidebar */}
-      <aside className="w-full md:w-64 bg-white border-r border-border">
-        <div className="sticky top-0">
-          <div className="h-16 flex items-center border-b border-border px-6">
+      <aside className={cn(
+        "bg-white border-r border-border fixed inset-y-0 left-0 z-50 w-64 transform transition-transform duration-300 md:relative md:translate-x-0",
+        isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+      )}>
+        <div className="h-full flex flex-col">
+          <div className="h-16 flex items-center justify-between border-b border-border px-6">
             <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition">
               <img src="/logo-transparent.png" alt="" className="w-10 h-10" />
-              <span className="font-bold text-primary hidden md:inline">Zenxity</span>
+              <span className="font-bold text-primary">Zenxity</span>
             </Link>
+            <button className="md:hidden text-muted-foreground" onClick={() => setIsSidebarOpen(false)}>
+              <X className="w-6 h-6" />
+            </button>
           </div>
-          <nav className="py-4">
+          <nav className="flex-1 py-4 overflow-y-auto">
             {sidebarItems.map((item) => {
               const Icon = item.icon;
               return (
-                <button key={item.id} onClick={() => setActiveSection(item.id)} className={`w-full flex items-center gap-3 px-6 py-3 text-left transition ${activeSection === item.id ? "bg-secondary text-primary border-r-4 border-primary" : "text-muted-foreground hover:bg-secondary/50"}`}>
+                <button
+                  key={item.id}
+                  onClick={() => {
+                    setActiveSection(item.id);
+                    setIsSidebarOpen(false);
+                  }}
+                  className={cn(
+                    "w-full flex items-center gap-3 px-6 py-3 text-left transition",
+                    activeSection === item.id ? "bg-secondary text-primary border-r-4 border-primary" : "text-muted-foreground hover:bg-secondary/50"
+                  )}
+                >
                   <Icon className="w-5 h-5" />
-                  <span className="font-medium hidden md:inline">{item.label}</span>
+                  <span className="font-medium">{item.label}</span>
                 </button>
               );
             })}
@@ -271,7 +299,7 @@ export default function AdminDashboard() {
             <button onClick={() => signOut({ callbackUrl: '/' })} className="w-full">
               <Button variant="ghost" className="w-full justify-start gap-2 text-red-600 hover:bg-red-50">
                 <LogOut className="w-5 h-5" />
-                <span className="hidden md:inline">Logout</span>
+                <span>Logout</span>
               </Button>
             </button>
           </div>
@@ -282,7 +310,17 @@ export default function AdminDashboard() {
       <main className="flex-1 overflow-auto">
         <nav className="bg-white border-b border-border sticky top-0 z-40">
           <div className="px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-            <h1 className="text-2xl font-bold text-foreground">Admin Dashboard</h1>
+            <div className="flex items-center gap-4">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="md:hidden"
+                onClick={() => setIsSidebarOpen(true)}
+              >
+                <Menu className="w-6 h-6" />
+              </Button>
+              <h1 className="text-xl md:text-2xl font-bold text-foreground truncate">Dashboard</h1>
+            </div>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="sm" className="gap-2">
@@ -350,17 +388,17 @@ export default function AdminDashboard() {
                   <Plus className="w-4 h-4" /> Direct Add Project
                 </Button>
               </div>
-              
+
               {showAddProjectForm && (
                 <div className="bg-white rounded-lg border border-border p-8 max-w-xl">
                   <h3 className="text-lg font-bold text-foreground mb-6">Create Approved Project</h3>
                   <form onSubmit={handleAddProject} className="space-y-4">
                     <div>
                       <Label className="text-foreground font-semibold mb-2">Select User</Label>
-                      <select 
-                        value={projectData.userId} 
-                        onChange={(e) => setProjectData({ ...projectData, userId: e.target.value })} 
-                        className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-black" 
+                      <select
+                        value={projectData.userId}
+                        onChange={(e) => setProjectData({ ...projectData, userId: e.target.value })}
+                        className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-black"
                         required
                       >
                         <option value="">-- Choose a User --</option>
@@ -374,31 +412,31 @@ export default function AdminDashboard() {
                     </div>
                     <div>
                       <Label className="text-foreground font-semibold mb-2">Land Size (Acres)</Label>
-                      <Input 
-                        type="text" 
-                        placeholder="e.g. 5" 
-                        value={projectData.landSize} 
-                        onChange={(e) => setProjectData({ ...projectData, landSize: e.target.value })} 
-                        required 
+                      <Input
+                        type="text"
+                        placeholder="e.g. 5"
+                        value={projectData.landSize}
+                        onChange={(e) => setProjectData({ ...projectData, landSize: e.target.value })}
+                        required
                       />
                     </div>
                     <div>
                       <Label className="text-foreground font-semibold mb-2">Location (City/Address)</Label>
-                      <Input 
-                        type="text" 
-                        placeholder="e.g., Coimbatore" 
-                        value={projectData.landAddress} 
-                        onChange={(e) => setProjectData({ ...projectData, landAddress: e.target.value })} 
-                        required 
+                      <Input
+                        type="text"
+                        placeholder="e.g., Coimbatore"
+                        value={projectData.landAddress}
+                        onChange={(e) => setProjectData({ ...projectData, landAddress: e.target.value })}
+                        required
                       />
                     </div>
                     <div>
                       <Label className="text-foreground font-semibold mb-2">Notes (Optional)</Label>
-                      <Input 
-                        type="text" 
-                        placeholder="e.g., Organic Tomato Farming" 
-                        value={projectData.notes} 
-                        onChange={(e) => setProjectData({ ...projectData, notes: e.target.value })} 
+                      <Input
+                        type="text"
+                        placeholder="e.g., Organic Tomato Farming"
+                        value={projectData.notes}
+                        onChange={(e) => setProjectData({ ...projectData, notes: e.target.value })}
                       />
                     </div>
                     <div className="flex gap-4">
@@ -438,11 +476,11 @@ export default function AdminDashboard() {
                               </span>
                               {(req.status === "APPROVED" || req.status?.toLowerCase() === "accepted") && (
                                 <div className="flex items-center gap-2 bg-gray-50 px-2 py-1 rounded border border-gray-200">
-                                  <input 
-                                    type="number" 
-                                    min="0" 
-                                    max="100" 
-                                    defaultValue={req.progress || 0} 
+                                  <input
+                                    type="number"
+                                    min="0"
+                                    max="100"
+                                    defaultValue={req.progress || 0}
                                     onBlur={async (e) => {
                                       const val = parseInt(e.target.value);
                                       if (isNaN(val)) return;
@@ -462,16 +500,16 @@ export default function AdminDashboard() {
                           <td className="py-4 px-6">
                             {req.status?.toLowerCase() === "pending" ? (
                               <div className="flex gap-2">
-                                <Button 
-                                  size="sm" 
-                                  className="bg-green-600 hover:bg-green-700 text-white gap-1 shadow-sm" 
+                                <Button
+                                  size="sm"
+                                  className="bg-green-600 hover:bg-green-700 text-white gap-1 shadow-sm"
                                   onClick={() => handleRequestAction(req.id, "accept")}
                                 >
                                   <CheckCircle className="w-4 h-4" /> {t("Accept")}
                                 </Button>
-                                <Button 
-                                  size="sm" 
-                                  variant="destructive" 
+                                <Button
+                                  size="sm"
+                                  variant="destructive"
                                   className="gap-1 shadow-sm"
                                   onClick={() => handleRequestAction(req.id, "reject")}
                                 >
@@ -481,16 +519,16 @@ export default function AdminDashboard() {
                             ) : (
                               <div className="flex flex-col gap-2">
                                 <span className="text-muted-foreground text-xs font-medium px-2 py-1 bg-gray-100 rounded text-center">
-                                  {req.status?.toLowerCase() === "accepted" || req.status?.toLowerCase() === "approved" 
-                                    ? t("Processed") 
+                                  {req.status?.toLowerCase() === "accepted" || req.status?.toLowerCase() === "approved"
+                                    ? t("Processed")
                                     : t("Closed")}
                                 </span>
                               </div>
                             )}
-                            <Button 
+                            <Button
                               asChild
-                              size="sm" 
-                              variant="outline" 
+                              size="sm"
+                              variant="outline"
                               className="mt-2 gap-1 shadow-sm border-primary/30 hover:border-primary text-primary hover:text-primary flex"
                             >
                               <Link href={`/admin/requests/${req.id}`}>
@@ -509,7 +547,7 @@ export default function AdminDashboard() {
               {false && (
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 overflow-y-auto">
                   <div className="bg-white rounded-xl shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto flex flex-col border">
-                    
+
                     {/* Modal Header */}
                     <div className="p-6 border-b flex items-center justify-between bg-gray-50">
                       <div>
@@ -521,10 +559,10 @@ export default function AdminDashboard() {
 
                     {/* Modal Body */}
                     <div className="p-6 space-y-8 flex-1">
-                      
+
                       {/* Grid Split: User Info & Project Legal Details */}
                       <div className="grid md:grid-cols-2 gap-6">
-                        
+
                         <div className="bg-gray-50 p-4 rounded-lg border border-gray-100 space-y-3">
                           <h4 className="font-bold text-primary text-sm border-b pb-1">{t("User Information")}</h4>
                           <div>
@@ -584,9 +622,9 @@ export default function AdminDashboard() {
                         <div className="grid md:grid-cols-3 gap-4 items-end">
                           <div className="md:col-span-2 space-y-1">
                             <Label className="text-xs text-muted-foreground">{t("Milestone Steps (Comma-separated)")}</Label>
-                            <Input 
-                              type="text" 
-                              placeholder="e.g., Planning, Tilling, Sowing, Harvest, Completed" 
+                            <Input
+                              type="text"
+                              placeholder="e.g., Planning, Tilling, Sowing, Harvest, Completed"
                               defaultValue={selectedProject.milestones || "Planning, Growing, Harvest, Completed"}
                               onBlur={async (e) => {
                                 const res = await fetch("/api/land-requests/progress", {
@@ -605,10 +643,10 @@ export default function AdminDashboard() {
                           </div>
                           <div className="space-y-1">
                             <Label className="text-xs text-muted-foreground">{t("Overall Completion (%)")}</Label>
-                            <Input 
+                            <Input
                               type="number"
                               min="0"
-                              max="100" 
+                              max="100"
                               defaultValue={selectedProject.progress || 0}
                               onBlur={async (e) => {
                                 const val = parseInt(e.target.value);
@@ -837,10 +875,10 @@ export default function AdminDashboard() {
                 <form onSubmit={handleAddFinancial} className="space-y-4">
                   <div>
                     <Label className="text-foreground font-semibold mb-2">Select User</Label>
-                    <select 
-                      value={financialData.userId} 
-                      onChange={(e) => setFinancialData({ ...financialData, userId: e.target.value })} 
-                      className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-black" 
+                    <select
+                      value={financialData.userId}
+                      onChange={(e) => setFinancialData({ ...financialData, userId: e.target.value })}
+                      className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-black"
                       required
                     >
                       <option value="">-- Choose a User --</option>
@@ -854,22 +892,22 @@ export default function AdminDashboard() {
                   </div>
                   <div>
                     <Label className="text-foreground font-semibold mb-2 flex items-center gap-2">Description</Label>
-                    <Input 
-                      type="text" 
-                      placeholder="e.g., Organic Carrot Harvest Profit" 
-                      value={financialData.description} 
-                      onChange={(e) => setFinancialData({ ...financialData, description: e.target.value })} 
-                      required 
+                    <Input
+                      type="text"
+                      placeholder="e.g., Organic Carrot Harvest Profit"
+                      value={financialData.description}
+                      onChange={(e) => setFinancialData({ ...financialData, description: e.target.value })}
+                      required
                     />
                   </div>
                   <div>
                     <Label className="text-foreground font-semibold mb-2 flex items-center gap-2">Amount (₹)</Label>
-                    <Input 
-                      type="number" 
-                      placeholder="e.g. 25000" 
-                      value={financialData.amount} 
-                      onChange={(e) => setFinancialData({ ...financialData, amount: e.target.value })} 
-                      required 
+                    <Input
+                      type="number"
+                      placeholder="e.g. 25000"
+                      value={financialData.amount}
+                      onChange={(e) => setFinancialData({ ...financialData, amount: e.target.value })}
+                      required
                     />
                   </div>
                   <Button type="submit" className="w-full" disabled={financialLoading}>
