@@ -24,10 +24,10 @@ export default async function DashboardHomePage() {
   const userId = session.user.id;
 
   // Fetch actual data from DB where possible
-  const [requests, updates, user] = await Promise.all([
+  const [requests, updates, user, financialRecords, allOffers] = await Promise.all([
     prisma.farmingRequest.findMany({
       where: { userId },
-      select: { id: true, landSize: true, status: true },
+      select: { id: true, landSize: true, status: true, landAddress: true },
     }),
     prisma.farmingUpdates.findMany({
       where: { request: { userId } },
@@ -40,8 +40,15 @@ export default async function DashboardHomePage() {
     }) : Promise.resolve(null),
     prisma.financialRecord.findMany({
       where: { userId }
+    }),
+    prisma.offer.findMany({
+      orderBy: { createdAt: "desc" },
+      take: 4
     })
   ]);
+
+  const offers = allOffers; 
+
 
   const activeProjectsCount = requests.filter(r => r.status === "APPROVED").length;
 
@@ -52,7 +59,6 @@ export default async function DashboardHomePage() {
   }, 0);
 
   // Real financial data from DB
-  const financialRecords = await prisma.financialRecord.findMany({ where: { userId } });
   const totalEarnings = financialRecords.reduce((acc, rec) => acc + rec.amount, 0);
   const seasonProfit = totalEarnings; // Using total earnings as profit metric for dashboard simplicity
 
@@ -124,6 +130,35 @@ export default async function DashboardHomePage() {
           icon={ClipboardList}
         />
       </div>
+
+      {/* Special Offers */}
+      {offers.length > 0 && (
+        <section className="animate-in fade-in slide-in-from-bottom-4 duration-700 delay-150">
+          <div className="flex items-center gap-2 mb-6">
+            <h2 className="text-xl font-bold text-foreground">{t("Special Offers & Benefits")}</h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {offers.map((offer) => (
+              <div key={offer.id} className="group bg-white rounded-2xl border border-gray-100 p-5 hover:shadow-xl hover:shadow-gray-200/50 transition-all duration-300 relative overflow-hidden">
+                <div className="absolute top-0 right-0 p-2 opacity-10 group-hover:opacity-20 transition-opacity">
+                  <TrendingUp className="w-12 h-12 text-primary rotate-12" />
+                </div>
+                <div className="space-y-3 relative z-10">
+                  <div className="flex justify-between items-start">
+                    <h3 className="font-bold text-foreground leading-tight group-hover:text-primary transition-colors">{offer.title}</h3>
+                  </div>
+                  <p className="text-xs text-muted-foreground line-clamp-2">{offer.description}</p>
+                  <div className="pt-2 flex items-center justify-between">
+                    <span className="text-[10px] font-bold text-primary uppercase tracking-wider bg-primary/5 px-2 py-1 rounded">
+                      {t("Valid Until")}: {offer.validUntil}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* Recent Updates */}
       <section>
