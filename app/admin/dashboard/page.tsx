@@ -362,14 +362,28 @@ export default function AdminDashboard() {
                 <h3 className="text-xl font-bold text-foreground mb-4">Recent Requests</h3>
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm">
-                    <thead className="border-b border-border"><tr><th className="text-left py-3 px-2 text-muted-foreground font-semibold">User</th><th className="text-left py-3 px-2 text-muted-foreground font-semibold">Size</th><th className="text-left py-3 px-2 text-muted-foreground font-semibold">City</th><th className="text-left py-3 px-2 text-muted-foreground font-semibold">Status</th></tr></thead>
+                    <thead className="border-b border-border">
+                      <tr>
+                        <th className="text-left py-3 px-2 text-muted-foreground font-semibold">User</th>
+                        <th className="text-left py-3 px-2 text-muted-foreground font-semibold hidden sm:table-cell">Size</th>
+                        <th className="text-left py-3 px-2 text-muted-foreground font-semibold">City</th>
+                        <th className="text-left py-3 px-2 text-muted-foreground font-semibold">Status</th>
+                      </tr>
+                    </thead>
                     <tbody>
                       {requests.slice(0, 5).map((req) => (
                         <tr key={req.id} className="border-b border-border hover:bg-gray-50">
-                          <td className="py-3 px-2 text-foreground">{req.user?.name}</td>
-                          <td className="py-3 px-2 text-muted-foreground">{req.landSize}</td>
-                          <td className="py-3 px-2 text-foreground font-medium">{req.landAddress}</td>
-                          <td className="py-3 px-2"><span className={`px-3 py-1 rounded-full border text-xs font-semibold ${getStatusColor(req.status)}`}>{req.status?.charAt(0).toUpperCase() + req.status?.slice(1).toLowerCase()}</span></td>
+                          <td className="py-3 px-2 text-foreground whitespace-nowrap">{req.user?.name}</td>
+                          <td className="py-3 px-2 text-muted-foreground hidden sm:table-cell">{req.landSize}</td>
+                          <td className="py-3 px-2 text-foreground font-medium whitespace-nowrap">{req.landAddress}</td>
+                          <td className="py-3 px-2">
+                            <span className={cn(
+                              "px-2 py-1 rounded-full border text-[10px] sm:text-xs font-semibold whitespace-nowrap",
+                              getStatusColor(req.status)
+                            )}>
+                              {req.status?.charAt(0).toUpperCase() + req.status?.slice(1).toLowerCase()}
+                            </span>
+                          </td>
                         </tr>
                       ))}
                     </tbody>
@@ -382,7 +396,7 @@ export default function AdminDashboard() {
           {/* Requests Management */}
           {activeSection === "requests" && (
             <div className="space-y-6">
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between flex-wrap gap-3">
                 <h2 className="text-2xl font-bold text-foreground">Farming Requests Management</h2>
                 <Button onClick={() => setShowAddProjectForm(!showAddProjectForm)} className="gap-2">
                   <Plus className="w-4 h-4" /> Direct Add Project
@@ -453,23 +467,23 @@ export default function AdminDashboard() {
                   <table className="w-full text-sm text-left min-w-[900px] border-collapse">
                     <thead className="bg-gray-50 border-b border-border">
                       <tr>
-                        <th className="py-4 px-6 text-muted-foreground font-semibold">{t("User")}</th>
-                        <th className="py-4 px-6 text-muted-foreground font-semibold">{t("Size")}</th>
-                        <th className="py-4 px-6 text-muted-foreground font-semibold">{t("City")}</th>
-                        <th className="py-4 px-6 text-muted-foreground font-semibold">{t("Status & Progress")}</th>
-                        <th className="py-4 px-6 text-muted-foreground font-semibold">{t("Action")}</th>
+                        <th className="py-4 px-4 sm:px-6 text-muted-foreground font-semibold whitespace-nowrap">{t("User")}</th>
+                        <th className="py-4 px-4 sm:px-6 text-muted-foreground font-semibold hidden md:table-cell">{t("Size")}</th>
+                        <th className="py-4 px-4 sm:px-6 text-muted-foreground font-semibold whitespace-nowrap">{t("City")}</th>
+                        <th className="py-4 px-4 sm:px-6 text-muted-foreground font-semibold">{t("Status & Progress")}</th>
+                        <th className="py-4 px-4 sm:px-6 text-muted-foreground font-semibold">{t("Action")}</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-100">
                       {requests.map((req) => (
                         <tr key={req.id} className="hover:bg-gray-50 transition-colors">
-                          <td className="py-4 px-6">
-                            <p className="text-foreground font-semibold">{req.user?.name}</p>
-                            <p className="text-xs text-muted-foreground">{req.user?.email}</p>
+                          <td className="py-4 px-4 sm:px-6">
+                            <p className="text-foreground font-semibold whitespace-nowrap">{req.user?.name}</p>
+                            <p className="text-xs text-muted-foreground truncate max-w-[120px]">{req.user?.email}</p>
                           </td>
-                          <td className="py-4 px-6 text-muted-foreground">{req.landSize} {t("Acres")}</td>
-                          <td className="py-4 px-6 text-foreground">{req.landAddress}</td>
-                          <td className="py-4 px-6">
+                          <td className="py-4 px-4 sm:px-6 text-muted-foreground hidden md:table-cell whitespace-nowrap">{req.landSize} {t("Acres")}</td>
+                          <td className="py-4 px-4 sm:px-6 text-foreground whitespace-nowrap">{req.landAddress}</td>
+                          <td className="py-4 px-4 sm:px-6">
                             <div className="flex flex-col gap-2 max-w-[140px]">
                               <span className={`px-2.5 py-1 rounded-full border text-xs font-semibold text-center ${getStatusColor(req.status)}`}>
                                 {req.status?.charAt(0).toUpperCase() + req.status?.slice(1).toLowerCase()}

@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Leaf, Clock, TrendingUp, Award, ArrowRight, Play, Sprout, BarChart3, Phone, Mail, MessageCircle, MapPin, Banknote } from "lucide-react";
+import { Leaf, Clock, TrendingUp, Award, ArrowRight, Play, Sprout, BarChart3, Phone, Mail, MessageCircle, MapPin, Banknote, CheckCircle, Shield, Truck, LandPlot } from "lucide-react";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -87,10 +87,10 @@ export default function Home() {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4">
-              <Link href={isLoggedIn ? "/dashboard/land" : "/login"} className="inline-flex items-center justify-center gap-2 px-7 py-4 text-base font-semibold rounded-xl bg-green-600 text-white hover:bg-green-700 transition-colors shadow-lg shadow-green-900/20">
+              <Link href={isLoggedIn ? "/dashboard/land" : "/login"} className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-4 text-base font-semibold rounded-xl bg-green-600 text-white hover:bg-green-700 transition-colors shadow-lg shadow-green-900/20">
                 Register Your Land Free <ArrowRight size={18} />
               </Link>
-              <Link href="#about" className="inline-flex items-center justify-center gap-2 px-7 py-4 text-base font-semibold rounded-xl border-2 border-white/30 text-white hover:bg-white/10 transition-colors backdrop-blur-sm">
+              <Link href="#about" className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-4 text-base font-semibold rounded-xl border-2 border-white/30 text-white hover:bg-white/10 transition-colors backdrop-blur-sm">
                 <Play size={18} /> Watch How It Works
               </Link>
             </div>
@@ -105,61 +105,50 @@ export default function Home() {
       </section>
 
       {/* Features Section */}
-      <section id="features" className="py-12 md:py-24 px-4 sm:px-6 lg:px-8 bg-white">
+      <section id="features" className="py-16 md:py-24 bg-white">
         <div className="container mx-auto px-4 md:px-8">
-          <h2 className="text-4xl sm:text-5xl font-bold text-center mb-16 text-foreground tracking-tight">
-            Why Choose Zenxity?
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {[
-              {
-                icon: Clock,
-                title: "Easy to Get Started",
-                desc: "Share your land details and our team takes care of the rest.",
-              },
-              {
-                icon: BarChart3,
-                title: "Complete Transparency",
-                desc: "Track farming activities through real-time updates, photos, and reports.",
-              },
-              {
-                icon: Award,
-                title: "Professional Management",
-                desc: "Experienced teams handle all farming operations efficiently.",
-              },
-              {
-                icon: Sprout,
-                title: "Better Use of Your Land",
-                desc: "Convert unused land into productive farmland.",
-              },
-            ].map((feature, i) => (
-              <div
-                key={i}
-                className="bg-gray-50 rounded-3xl p-8 shadow-sm border border-gray-100 flex flex-col items-center text-center hover:shadow-md hover:-translate-y-1 transition-all duration-300 group"
-              >
-                <div className="bg-green-100 text-green-600 rounded-2xl p-6 mb-6 inline-flex items-center justify-center transition-colors duration-300 group-hover:bg-green-600 group-hover:text-white">
-                  <feature.icon className="w-12 h-12" />
-                </div>
-                <h3 className="text-xl font-bold text-foreground mb-3 tracking-tight">
-                  {feature.title}
-                </h3>
-                <p className="text-muted-foreground text-sm leading-relaxed max-w-[250px]">
-                  {feature.desc}
-                </p>
-              </div>
-            ))}
+          <div className="max-w-4xl mx-auto text-center mb-20 space-y-6">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-foreground tracking-tight leading-tight">
+              Why Choose Zenxity?
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-6 lg:gap-8 p-4 lg:p-0">
+            <div className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary/5 to-green-light p-8 border border-border/50 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-primary/10">
+              <div className="absolute inset-0 bg-gradient-to-t from-primary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10" />
+              <h3 className="text-2xl font-bold text-foreground mb-4 transition-colors">Easy to Get Started</h3>
+              <p className="text-muted-foreground leading-relaxed transition-colors">Share your land details and our team takes care of the rest.</p>
+            </div>
+
+            <div className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-accent/5 to-primary/5 p-8 border border-border/50 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-accent/10">
+              <div className="absolute inset-0 bg-gradient-to-t from-accent/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10" />
+              <h3 className="text-2xl font-bold text-foreground mb-4 transition-colors">Complete Transparency</h3>
+              <p className="text-muted-foreground leading-relaxed transition-colors">Track farming activities through real-time updates, photos, and reports.</p>
+            </div>
+
+            <div className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-green-500/5 to-emerald-500/5 p-8 border border-border/50 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-green-500/10">
+              <div className="absolute inset-0 bg-gradient-to-t from-green-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10" />
+              <h3 className="text-2xl font-bold text-foreground mb-4 transition-colors">Professional Management</h3>
+              <p className="text-muted-foreground leading-relaxed transition-colors">Experienced teams handle all farming operations efficiently.</p>
+            </div>
+
+            <div className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-emerald-500/5 to-green-light p-8 border border-border/50 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-emerald-500/10">
+              <div className="absolute inset-0 bg-gradient-to-t from-emerald-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10" />
+              <h3 className="text-2xl font-bold text-foreground mb-4 transition-colors">Better Use of Your Land</h3>
+              <p className="text-muted-foreground leading-relaxed transition-colors">Convert unused land into productive farmland.</p>
+            </div>
           </div>
         </div>
       </section>
 
       {/* How It Works Section */}
-      <section id="how-it-works" className="py-12 md:py-24 px-4 sm:px-6 lg:px-8 bg-white">
+      <section id="how-it-works" className="py-16 md:py-24 bg-white">
         <div className="container mx-auto px-4 md:px-8 relative">
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <h2 className="text-4xl sm:text-5xl font-bold mb-6 text-foreground tracking-tight">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-foreground tracking-tight leading-tight">
               Three steps. That's it.
             </h2>
-            <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
+            <p className="text-base md:text-lg text-muted-foreground leading-relaxed">
               No complicated process. No technical knowledge needed.
             </p>
           </div>
@@ -187,7 +176,7 @@ export default function Home() {
             ].map((s, i) => (
               <div
                 key={s.num}
-                className="group relative rounded-3xl p-10 bg-white border border-gray-100 shadow-2xl overflow-hidden cursor-pointer hover:-translate-y-2 transition-all duration-300"
+                className="group relative rounded-3xl p-6 sm:p-10 bg-white border border-gray-100 shadow-2xl overflow-hidden cursor-pointer hover:-translate-y-2 transition-all duration-300"
               >
                 {/* Number badge */}
                 <div className="absolute -top-6 left-1/2 -translate-x-1/2 w-20 h-20 rounded-2xl bg-gradient-to-br from-emerald-500 to-green-600 flex items-center justify-center shadow-2xl border-4 border-white text-white font-black text-2xl drop-shadow-lg z-20">
@@ -198,10 +187,10 @@ export default function Home() {
                   <s.icon size={36} className="text-white drop-shadow-lg" />
                 </div>
 
-                <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center leading-tight relative z-10">
+                <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-6 text-center leading-tight relative z-10">
                   {s.title}
                 </h3>
-                <p className="text-lg text-gray-600 leading-relaxed text-center opacity-95 relative z-10">
+                <p className="text-base sm:text-lg text-gray-600 leading-relaxed text-center opacity-95 relative z-10">
                   {s.desc}
                 </p>
               </div>
@@ -211,15 +200,15 @@ export default function Home() {
       </section>
 
       {/* Lead Generation Section */}
-      <section id="partner" className="py-12 md:py-32 bg-white">
+      <section id="partner" className="py-16 md:py-24 bg-white">
         <div className="container mx-auto px-4 md:px-8">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div className="space-y-8">
               <div>
-                <h2 className="text-4xl sm:text-5xl font-bold mb-6 text-foreground tracking-tight leading-tight">
+                <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-foreground tracking-tight leading-tight">
                   Partner With Us Today
                 </h2>
-                <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-xl leading-relaxed">
+                <p className="text-base md:text-lg text-muted-foreground mb-8 max-w-xl leading-relaxed">
                   If you own agricultural land but cannot actively manage it, Zenxity can help you <span className="">generate income</span> while ensuring modern, sustainable farming practices.
                 </p>
               </div>
@@ -237,7 +226,7 @@ export default function Home() {
                         <path d="M11.4669 3.72684C11.7558 3.91574 11.8369 4.30308 11.648 4.59198L7.39799 11.092C7.29783 11.2452 7.13556 11.3467 6.95402 11.3699C6.77247 11.3931 6.58989 11.3355 6.45446 11.2124L3.70446 8.71241C3.44905 8.48022 3.43023 8.08494 3.66242 7.82953C3.89461 7.57412 4.28989 7.55529 4.5453 7.78748L6.75292 9.79441L10.6018 3.90792C10.7907 3.61902 11.178 3.53795 11.4669 3.72684Z" fill="currentColor" fillRule="evenodd" clipRule="evenodd"></path>
                       </svg>
                     </div>
-                    <span className="text-lg font-medium text-muted-foreground group-hover:text-foreground transition-colors">{item}</span>
+                    <span className="text-base font-medium text-muted-foreground group-hover:text-foreground transition-colors">{item}</span>
                   </li>
                 ))}
               </ul>
@@ -252,23 +241,22 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="about" className="py-12 md:py-24 px-4 sm:px-6 lg:px-8 bg-white">
+      <section id="about" className="py-16 md:py-24 bg-white">
         <div className="container mx-auto px-4 md:px-8">
           <div className="text-left max-w-3xl mb-16">
-            <h2 className="text-4xl sm:text-5xl font-bold mb-6 text-foreground tracking-tight">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-foreground tracking-tight leading-tight">
               About Zenxity
             </h2>
-            <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
+            <p className="text-base md:text-lg text-muted-foreground leading-relaxed">
               We help landowners turn unused or underutilized agricultural land into productive farmland, managing the entire process with complete transparency.
             </p>
           </div>
 
           <div className="mb-16">
             <div className="flex items-center gap-4 mb-4">
-
-              <h3 className="text-4xl font-bold text-foreground">Our Mission</h3>
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-foreground tracking-tight leading-tight">Our Mission</h2>
             </div>
-            <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
+            <p className="text-base md:text-lg text-muted-foreground leading-relaxed">
               We use tech and expert farm management to help landowners generate sustainable, transparent income.
             </p>
           </div>
@@ -303,7 +291,7 @@ export default function Home() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-12 md:py-24 px-4 sm:px-6 lg:px-8 bg-white">
+      <section className="py-12 md:py-24 bg-white">
         <div className="container mx-auto px-4 md:px-8">
           <div className="relative rounded-[2.5rem] overflow-hidden shadow-2xl shadow-green-900/20">
             {/* Background Image */}
@@ -316,27 +304,29 @@ export default function Home() {
               <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6 drop-shadow-sm">
                 Start Earning From Your Land Today
               </h2>
-              <p className="text-lg md:text-xl mb-10 max-w-2xl mx-auto text-green-50 drop-shadow">
+              <p className="text-lg hidden md:block md:text-xl mb-10 max-w-2xl mx-auto text-green-50 drop-shadow">
                 Submit your land details and let our farming experts handle the rest. Sit back, relax, and watch your unused land turn into a steady source of income.
               </p>
-              <Link href={isLoggedIn ? "/dashboard" : "/login"} className="inline-block">
-                <Button size="lg" className="bg-white text-green-700 hover:bg-gray-50 px-8 py-6 text-lg font-semibold rounded-xl shadow-xl transition-transform hover:-translate-y-1">
-                  Get Started Now <ArrowRight className="ml-2 w-5 h-5" />
-                </Button>
-              </Link>
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
+                <Link href={isLoggedIn ? "/dashboard" : "/login"} className="w-full sm:w-auto">
+                  <Button size="lg" className="w-full sm:w-auto bg-white text-green-700 hover:bg-gray-50 px-6 py-5 sm:px-8 sm:py-6 text-base sm:text-lg font-semibold rounded-xl shadow-xl transition-transform hover:-translate-y-1">
+                    Get Started Now <ArrowRight className="ml-2 w-5 h-5" />
+                  </Button>
+                </Link>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
       {/* Contact Section */}
-      <section id="contact" className="py-12 md:py-24 px-4 sm:px-6 lg:px-8 bg-white">
+      <section id="contact" className="py-16 md:py-24 bg-white">
         <div className="container mx-auto px-4 md:px-8">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             {/* Left */}
             <div className="space-y-8">
               <div>
-                <h2 className="text-4xl sm:text-5xl font-bold mb-6 text-foreground tracking-tight leading-tight">
+                <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-foreground tracking-tight leading-tight">
                   Have a question? Talk to us.
                 </h2>
               </div>

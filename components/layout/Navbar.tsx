@@ -57,7 +57,7 @@ export function Navbar() {
         isHomePage
           ? cn(
             "fixed top-0 left-0 right-0 backdrop-blur-md",
-            isScrolled ? "bg-white text-foreground shadow-md" : "bg-white/10 text-white"
+            isScrolled || isMenuOpen ? "bg-white text-foreground shadow-md" : "bg-transparent text-white"
           )
           : "sticky top-0 bg-white text-foreground shadow-sm border-b border-border"
       )}
@@ -68,9 +68,9 @@ export function Navbar() {
           <img src="/logo-transparent.png" alt="Zenxity Logo" className="w-10 h-10" />
           <span className={cn(
             "text-2xl font-bold transition-all duration-500",
-            (isHomePage && !isScrolled)
+            (isHomePage && !isScrolled && !isMenuOpen)
               ? "text-white group-hover:text-green-400"
-              : "text-primary group-hover:text-green-700"
+              : "text-green-600 group-hover:text-green-700"
           )}>
             Zenxity
           </span>
@@ -84,7 +84,7 @@ export function Navbar() {
               href={link.href}
               className={cn(
                 "text-sm font-medium transition-colors duration-500",
-                (isHomePage && !isScrolled) ? "text-white/90 hover:text-white" : "text-foreground/80 hover:text-primary"
+                (isHomePage && !isScrolled && !isMenuOpen) ? "text-white/90 hover:text-green-400" : "text-foreground/80 hover:text-green-600"
               )}
             >
               {link.label}
@@ -96,7 +96,7 @@ export function Navbar() {
         <div className="hidden md:flex items-center gap-4">
           {session?.user ? (
             <>
-              <span className={cn("font-medium text-sm transition-colors duration-500", (isHomePage && !isScrolled) ? "text-white" : "text-foreground")}>
+              <span className={cn("font-medium text-sm transition-colors duration-500", (isHomePage && !isScrolled && !isMenuOpen) ? "text-white" : "text-foreground")}>
                 Welcome, {session.user.name}
               </span>
 
@@ -150,7 +150,7 @@ export function Navbar() {
         {/* Mobile Menu Button */}
         <div className="flex md:hidden items-center gap-4">
           {session?.user && (
-            <span className={cn("font-medium text-sm hidden xs:inline transition-colors duration-500", (isHomePage && !isScrolled) ? "text-white" : "text-foreground")}>
+            <span className={cn("font-medium text-sm hidden xs:inline transition-colors duration-500", (isHomePage && !isScrolled && !isMenuOpen) ? "text-white" : "text-foreground")}>
               {session.user.name}
             </span>
           )}
@@ -158,7 +158,7 @@ export function Navbar() {
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             className={cn(
               "p-2 rounded-md transition-colors duration-500",
-              (isHomePage && !isScrolled) ? "text-white hover:bg-white/10" : "text-foreground hover:bg-gray-100"
+              (isHomePage && !isScrolled && !isMenuOpen) ? "text-white hover:bg-white/10" : "text-foreground hover:bg-gray-100"
             )}
           >
             {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -171,7 +171,7 @@ export function Navbar() {
         <div
           className={cn(
             "md:hidden absolute top-16 left-0 right-0 border-b shadow-lg py-4 px-4 space-y-4 backdrop-blur-lg z-50 transition-colors duration-500",
-            (isHomePage && !isScrolled) ? "bg-white/10 backdrop-blur-xl border-white/10 text-white" : "bg-white text-foreground border-border"
+            (isHomePage && !isScrolled && !isMenuOpen) ? "bg-white/10 backdrop-blur-xl border-white/10 text-white" : "bg-white text-foreground border-border"
           )}
         >
           {navLinks.map((link) => (
@@ -179,7 +179,7 @@ export function Navbar() {
               key={link.label}
               href={link.href}
               onClick={() => setIsMenuOpen(false)}
-              className="block text-base font-medium py-2 hover:text-green-400 transition-colors"
+              className="block text-base font-medium py-2 hover:text-green-600 transition-colors"
             >
               {link.label}
             </Link>
