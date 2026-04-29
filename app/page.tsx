@@ -373,6 +373,21 @@ export default function Home() {
                 <li><a href="#" className="hover:text-green-400 transition-colors">Terms of Service</a></li>
               </ul>
             </div>
+            <div>
+              <h4 className="font-semibold text-white text-lg mb-6">Contact Us</h4>
+              <ul className="space-y-4 text-zinc-400">
+                <li className="flex items-center gap-3">
+                  <Phone size={18} className="text-green-600" />
+                  <span>+91 90423 59210</span>
+                </li>
+                <li className="flex items-center gap-3">
+                  <Mail size={18} className="text-green-600" />
+                  <a href="mailto:zenxity.in@gmail.com" className="hover:text-green-400 transition-colors">
+                    zenxity.in@gmail.com
+                  </a>
+                </li>
+              </ul>
+            </div>
           </div>
           <div className="border-t border-zinc-800/80 pt-8 text-center text-zinc-500">
             <p>&copy; 2026 Zenxity. All rights reserved.</p>
