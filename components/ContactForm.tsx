@@ -178,7 +178,11 @@ export function ContactForm() {
             )}
           />
 
-          <Button type="submit" className="w-full" disabled={isSubmitting}>
+          <Button 
+            type="submit" 
+            className="w-full bg-green-600 text-white hover:bg-green-700 shadow-lg shadow-green-900/20 transition-colors rounded-xl py-6 text-base font-semibold" 
+            disabled={isSubmitting}
+          >
             {isSubmitting ? "Submitting..." : "Submit"}
           </Button>
         </form>

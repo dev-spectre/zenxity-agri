@@ -12,7 +12,7 @@
    * A different format will require also updating the theme in tailwind.config.ts.
   */
   :root {
-    --background: 0 0% 100%;
+    --background: 210 20% 98%;
     --foreground: 15 23% 15%;
 
     --card: 0 0% 100%;
@@ -21,7 +21,7 @@
     --popover: 0 0% 100%;
     --popover-foreground: 15 23% 15%;
 
-    --primary: 143 55% 42%;
+    --primary: 142 76% 36%;
     --primary-foreground: 0 0% 100%;
 
     --secondary: 184 40% 95%;
@@ -69,7 +69,7 @@
     --popover: 15 23% 12%;
     --popover-foreground: 0 0% 98%;
 
-    --primary: 143 55% 50%;
+    --primary: 142 76% 45%;
     --primary-foreground: 15 23% 10%;
 
     --secondary: 184 40% 25%;
