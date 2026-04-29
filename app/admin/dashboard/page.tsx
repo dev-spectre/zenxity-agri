@@ -853,7 +853,7 @@ export default function AdminDashboard() {
                         <div key={update.id} className="border border-border rounded-lg overflow-hidden hover:shadow-sm transition">
                           <div className="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50" onClick={() => setExpandedUpdateId(expandedUpdateId === update.id ? null : update.id)}>
                             <div className="flex items-center gap-3">
-                              <div className="flex gap-1">{update.img && <Image className="w-4 h-4 text-blue-500" />}{update.video && <Video className="w-4 h-4 text-purple-500" />}</div>
+                              <div className="flex gap-1">{update.img && <ImageIcon className="w-4 h-4 text-green-600" />}{update.video && <VideoIcon className="w-4 h-4 text-green-600" />}</div>
                               <div>
                                 <h4 className="font-semibold text-foreground">{update.title}</h4>
                                 <p className="text-xs text-muted-foreground">{new Date(update.createdAt).toLocaleDateString()} {update.activityDate && `• Activity: ${update.activityDate}`} {update.activityTime && `at ${update.activityTime}`}</p>
