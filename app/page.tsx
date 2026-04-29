@@ -1,14 +1,57 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Leaf, Clock, TrendingUp, Award, ArrowRight, Play, Sprout, BarChart3 } from "lucide-react";
+import { Leaf, Clock, TrendingUp, Award, ArrowRight, Play, Sprout, BarChart3, Phone, Mail, MessageCircle } from "lucide-react";
 import { useEffect, useState } from "react";
-import { ContactForm } from "@/components/ContactForm";
 import Image from "next/image";
 import Link from "next/link";
+import { useToast } from "@/components/ui/use-toast";
 
 export default function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const { toast } = useToast();
+  
+  const [formData, setFormData] = useState({ name: "", phone: "", district: "", message: "" });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleContactSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    
+    try {
+      const url = "https://docs.google.com/forms/d/e/1FAIpQLSd-wb5wl3no9om4Eqva2-2Dux6fgS3YBVzVa8nF4c9SlGJq6g/formResponse";
+      const formDataParams = new URLSearchParams();
+      formDataParams.append("entry.2005620554", formData.name);
+      formDataParams.append("entry.1065046570", formData.district);
+      formDataParams.append("entry.1166974658", formData.phone);
+      formDataParams.append("entry.839337160", formData.message);
+
+      await fetch(url, {
+        method: "POST",
+        mode: "no-cors",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: formDataParams.toString(),
+      });
+
+      toast({
+        title: "Message Sent!",
+        description: "We'll get back to you soon.",
+      });
+      
+      setFormData({ name: "", phone: "", district: "", message: "" });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to send message. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
     if (accessToken) {
@@ -110,7 +153,7 @@ export default function Home() {
       </section>
 
       {/* Lead Generation Section */}
-      <section id="contact" className="py-12 md:py-32 bg-white">
+      <section id="partner" className="py-12 md:py-32 bg-white">
         <div className="container mx-auto px-4 md:px-8">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div className="space-y-8">
@@ -142,9 +185,9 @@ export default function Home() {
               </ul>
             </div>
 
-            <div className="relative lg:ml-auto w-full max-w-lg">
-              <div className="bg-gray-50 rounded-3xl p-1 shadow-xl shadow-gray-200/20 border border-gray-100 transition-transform duration-500 hover:-translate-y-2">
-                <ContactForm />
+            <div className="relative lg:ml-auto w-full max-w-2xl">
+              <div className="bg-white rounded-3xl border border-gray-100 shadow-xl overflow-hidden aspect-video">
+                <iframe className="w-full h-full" src="https://www.youtube.com/embed/6bC1KxqYACY" title="Your Farmland Is Sitting Idle? Let It Work For You 🌱" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>
               </div>
             </div>
           </div>
@@ -162,54 +205,40 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div className="space-y-8">
-              <div className="bg-gray-50 rounded-3xl p-8 border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
-                <div className="flex items-center gap-4 mb-4">
-                  <div className="bg-green-100 p-3 rounded-xl text-green-600">
-                    <Award className="w-6 h-6" />
-                  </div>
-                  <h3 className="text-2xl font-bold text-foreground">Our Mission</h3>
-                </div>
-                <p className="text-muted-foreground leading-relaxed">
-                  Our mission is to help landowners make productive use of their agricultural land by providing reliable farm management and transparent updates. Zenxity aims to simplify agriculture through technology, professional expertise, and modern practices so that landowners can generate sustainable income from their land with complete visibility and trust.
-                </p>
-              </div>
+          <div className="space-y-8 max-w-4xl mx-auto">
+            <div className="bg-gray-50 rounded-3xl p-8 border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
+              <div className="flex items-center gap-4 mb-4">
 
-              <div className="bg-gray-50 rounded-3xl p-8 border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
-                <div className="flex items-center gap-4 mb-6">
-                  <div className="bg-green-100 p-3 rounded-xl text-green-600">
-                    <Sprout className="w-6 h-6" />
-                  </div>
-                  <h3 className="text-2xl font-bold text-foreground">Our Services Include</h3>
-                </div>
-                <ul className="grid sm:grid-cols-2 gap-y-4 gap-x-6">
-                  {[
-                    "Contract farming management",
-                    "Land preparation & soil treatment",
-                    "Seeding & planting services",
-                    "Crop monitoring & maintenance",
-                    "Harvesting & post-harvest management",
-                    "Real-time updates & reports"
-                  ].map((service, idx) => (
-                    <li key={idx} className="flex items-start gap-2 text-muted-foreground">
-                      <div className="mt-1 bg-green-100 rounded-full p-1 text-green-600 flex-shrink-0">
-                        <svg width="10" height="10" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M11.4669 3.72684C11.7558 3.91574 11.8369 4.30308 11.648 4.59198L7.39799 11.092C7.29783 11.2452 7.13556 11.3467 6.95402 11.3699C6.77247 11.3931 6.58989 11.3355 6.45446 11.2124L3.70446 8.71241C3.44905 8.48022 3.43023 8.08494 3.66242 7.82953C3.89461 7.57412 4.28989 7.55529 4.5453 7.78748L6.75292 9.79441L10.6018 3.90792C10.7907 3.61902 11.178 3.53795 11.4669 3.72684Z" fill="currentColor" fillRule="evenodd" clipRule="evenodd"></path>
-                        </svg>
-                      </div>
-                      <span className="text-sm leading-tight">{service}</span>
-                    </li>
-                  ))}
-                </ul>
+                <h3 className="text-2xl font-bold text-foreground">Our Mission</h3>
               </div>
+              <p className="text-muted-foreground leading-relaxed">
+                Our mission is to help landowners make productive use of their agricultural land by providing reliable farm management and transparent updates. Zenxity aims to simplify agriculture through technology, professional expertise, and modern practices so that landowners can generate sustainable income from their land with complete visibility and trust.
+              </p>
             </div>
 
-            <div className="relative group">
-              <div className="absolute -inset-2 bg-gradient-to-r from-green-400 to-emerald-500 rounded-3xl blur opacity-20 group-hover:opacity-30 transition duration-500"></div>
-              <div className="relative bg-white rounded-3xl p-2 border border-gray-100 shadow-xl overflow-hidden aspect-video">
-                <iframe className="w-full h-full rounded-2xl bg-white" src="https://www.youtube.com/embed/6bC1KxqYACY" title="Your Farmland Is Sitting Idle? Let It Work For You 🌱" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>
+            <div className="bg-gray-50 rounded-3xl p-8 border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
+              <div className="flex items-center gap-4 mb-6">
+                <h3 className="text-2xl font-bold text-foreground">Our Services Include</h3>
               </div>
+              <ul className="grid sm:grid-cols-2 gap-y-4 gap-x-6">
+                {[
+                  "Contract farming management",
+                  "Land preparation & soil treatment",
+                  "Seeding & planting services",
+                  "Crop monitoring & maintenance",
+                  "Harvesting & post-harvest management",
+                  "Real-time updates & reports"
+                ].map((service, idx) => (
+                  <li key={idx} className="flex items-start gap-2 text-muted-foreground">
+                    <div className="mt-1 bg-green-100 rounded-full p-1 text-green-600 flex-shrink-0">
+                      <svg width="10" height="10" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M11.4669 3.72684C11.7558 3.91574 11.8369 4.30308 11.648 4.59198L7.39799 11.092C7.29783 11.2452 7.13556 11.3467 6.95402 11.3699C6.77247 11.3931 6.58989 11.3355 6.45446 11.2124L3.70446 8.71241C3.44905 8.48022 3.43023 8.08494 3.66242 7.82953C3.89461 7.57412 4.28989 7.55529 4.5453 7.78748L6.75292 9.79441L10.6018 3.90792C10.7907 3.61902 11.178 3.53795 11.4669 3.72684Z" fill="currentColor" fillRule="evenodd" clipRule="evenodd"></path>
+                      </svg>
+                    </div>
+                    <span className="text-sm leading-tight">{service}</span>
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
         </div>
@@ -222,7 +251,7 @@ export default function Home() {
             {/* Background Image */}
             <div className="absolute inset-0">
               <img src="/plowing.jpg" alt="Farming CTA Background" className="w-full h-full object-cover" />
-              <div className="absolute inset-0 bg-gradient-to-br from-green-900/90 via-green-800/80 to-emerald-900/90 mix-blend-multiply" />
+              <div className="absolute inset-0 bg-gradient-to-br from-green-900/80 via-green-800/70 to-emerald-900/80 mix-blend-multiply" />
             </div>
 
             <div className="relative z-10 px-8 py-16 md:py-20 md:px-16 text-center text-white">
@@ -242,6 +271,79 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Contact Section */}
+      <section id="contact" className="py-12 md:py-24 px-4 sm:px-6 lg:px-8 bg-white">
+        <div className="container mx-auto px-4 md:px-8">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            {/* Left */}
+            <div className="space-y-8">
+              <div>
+                <h2 className="text-4xl sm:text-5xl font-bold mb-6 text-foreground tracking-tight leading-tight">
+                  Have a question? Talk to us.
+                </h2>
+              </div>
+
+              <div className="space-y-6">
+                <div className="flex items-center gap-4 group">
+                  <div className="w-12 h-12 rounded-2xl bg-white flex items-center justify-center shrink-0 shadow-sm border border-gray-100 group-hover:-translate-y-1 transition-transform">
+                    <Phone size={20} className="text-green-600" />
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground font-medium">Phone</p>
+                    <p className="font-semibold text-foreground text-lg">+91 90423 59210</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-4 group">
+                  <div className="w-12 h-12 rounded-2xl bg-white flex items-center justify-center shrink-0 shadow-sm border border-gray-100 group-hover:-translate-y-1 transition-transform">
+                    <Mail size={20} className="text-green-600" />
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground font-medium">Email</p>
+                    <a href="mailto:zenxity.in@gmail.com" className="font-semibold text-foreground text-lg hover:text-green-600 transition-colors">zenxity.in@gmail.com</a>
+                  </div>
+                </div>
+              </div>
+
+              <a
+                href="https://wa.me/919042359210"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-[#25D366] text-white font-semibold hover:bg-[#20bd5a] transition-colors shadow-md shadow-green-900/10 hover:-translate-y-0.5 transform"
+              >
+                <MessageCircle size={20} /> Chat on WhatsApp
+              </a>
+            </div>
+
+            {/* Right - Form */}
+            <div className="relative lg:ml-auto w-full max-w-lg">
+              <div className="bg-white rounded-3xl p-8 shadow-xl shadow-gray-200/50 border border-gray-100">
+                <form className="space-y-5" onSubmit={handleContactSubmit}>
+                  <div>
+                    <label className="block text-sm font-medium text-foreground mb-1.5">Name</label>
+                    <input required type="text" placeholder="Your name" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-green-600/50 focus:border-green-600 text-base transition-colors" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-foreground mb-1.5">Phone Number</label>
+                    <input required type="tel" placeholder="+91" value={formData.phone} onChange={(e) => setFormData({...formData, phone: e.target.value})} className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-green-600/50 focus:border-green-600 text-base transition-colors" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-foreground mb-1.5">Your District</label>
+                    <input required type="text" placeholder="e.g. Coimbatore" value={formData.district} onChange={(e) => setFormData({...formData, district: e.target.value})} className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-green-600/50 focus:border-green-600 text-base transition-colors" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-foreground mb-1.5">Message</label>
+                    <textarea required rows={4} placeholder="Tell us about your land..." value={formData.message} onChange={(e) => setFormData({...formData, message: e.target.value})} className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-green-600/50 focus:border-green-600 text-base resize-none transition-colors" />
+                  </div>
+                  <button type="submit" disabled={isSubmitting} className="w-full py-3.5 rounded-xl bg-green-600 text-white font-semibold text-base hover:bg-green-700 transition-colors shadow-md shadow-green-600/20 disabled:opacity-70">
+                    {isSubmitting ? "Sending..." : "Send Message"}
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Footer */}
       <footer className="bg-zinc-950 text-gray-300 py-16 px-4 sm:px-6 lg:px-8 border-t border-zinc-900">
         <div className="container mx-auto px-4 md:px-8">
@@ -251,7 +353,7 @@ export default function Home() {
                 <Image src="/logo-transparent.png" alt="Zenxity Logo" width={40} height={40} className="w-10 h-10 drop-shadow-md" />
                 <span className="text-2xl font-bold text-white tracking-tight">Zenxity</span>
               </div>
-              <p className="text-zinc-400 leading-relaxed pr-4">Let Your Land Work for You. We bring modern farming practices to your unused farmland.</p>
+              <p className="text-zinc-400 leading-relaxed pr-4">Let Your Land Work for You.</p>
             </div>
             <div>
               <h4 className="font-semibold text-white text-lg mb-6">Services</h4>
