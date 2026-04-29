@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Leaf, Clock, TrendingUp, Award, ArrowRight, Play, Sprout, BarChart3, Phone, Mail, MessageCircle } from "lucide-react";
+import { Leaf, Clock, TrendingUp, Award, ArrowRight, Play, Sprout, BarChart3, Phone, Mail, MessageCircle, MapPin, Banknote } from "lucide-react";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -145,6 +145,64 @@ export default function Home() {
                 </h3>
                 <p className="text-muted-foreground text-sm leading-relaxed max-w-[250px]">
                   {feature.desc}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* How It Works Section */}
+      <section id="how-it-works" className="py-12 md:py-24 px-4 sm:px-6 lg:px-8 bg-white">
+        <div className="container mx-auto px-4 md:px-8 relative">
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <h2 className="text-4xl sm:text-5xl font-bold mb-6 text-foreground tracking-tight">
+              Three steps. That's it.
+            </h2>
+            <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
+              No complicated process. No technical knowledge needed.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-12 max-w-6xl mx-auto">
+            {[
+              {
+                num: "01",
+                icon: MapPin,
+                title: "Register Your Land",
+                desc: "Just your name, land location, and a photo. Our team will call you within 24 hours to verify.",
+              },
+              {
+                num: "02",
+                icon: Sprout,
+                title: "We Manage Everything",
+                desc: "Our expert team takes full charge — from land prep and planting to monitoring and harvest. You get photo updates every week.",
+              },
+              {
+                num: "03",
+                icon: Banknote,
+                title: "Receive Your Returns",
+                desc: "After every harvest, money goes directly to your bank account. Track every rupee on your phone.",
+              },
+            ].map((s, i) => (
+              <div 
+                key={s.num} 
+                className="group relative rounded-3xl p-10 bg-white border border-gray-100 shadow-2xl overflow-hidden cursor-pointer hover:-translate-y-2 transition-all duration-300"
+              >
+                {/* Number badge */}
+                <div className="absolute -top-6 left-1/2 -translate-x-1/2 w-20 h-20 rounded-2xl bg-gradient-to-br from-emerald-500 to-green-600 flex items-center justify-center shadow-2xl border-4 border-white text-white font-black text-2xl drop-shadow-lg z-20">
+                  {s.num}
+                </div>
+
+                <div className="w-20 h-20 mx-auto mb-8 rounded-2xl bg-gradient-to-br from-emerald-400 to-green-500 flex items-center justify-center shadow-xl relative z-10">
+                  <s.icon size={36} className="text-white drop-shadow-lg" />
+                </div>
+                
+                <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center leading-tight relative z-10">
+                  {s.title}
+                </h3>
+                <p className="text-lg text-gray-600 leading-relaxed text-center opacity-95 relative z-10">
+                  {s.desc}
                 </p>
               </div>
             ))}
