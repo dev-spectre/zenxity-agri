@@ -61,26 +61,6 @@ export default function Home() {
         </div>
 
         {/* Floating card - desktop only */}
-        <div className="hidden lg:block absolute right-12 xl:right-24 bottom-24 w-80">
-          <div className="rounded-2xl overflow-hidden shadow-2xl border border-white/10 backdrop-blur bg-white/95">
-            <img src="/hero-farm-2.jpg" alt="Aerial view of farmland" className="w-full h-40 object-cover" />
-            <div className="p-5 space-y-3">
-              <div className="flex justify-between items-center">
-                <span className="font-semibold text-gray-900">Monthly Earnings</span>
-                <span className="text-xs px-2 py-1 rounded-full bg-green-100 text-green-800 font-medium">+24% ROI</span>
-              </div>
-              <div className="text-3xl font-bold text-green-600">₹18,400</div>
-              <div className="flex gap-2 text-[10px]">
-                <span className="px-2.5 py-1 rounded-full bg-green-50 text-green-700 font-medium border border-green-100">🌾 Paddy</span>
-                <span className="px-2.5 py-1 rounded-full bg-yellow-50 text-yellow-700 font-medium border border-yellow-100">Harvest in 28 days</span>
-              </div>
-              <div className="w-full h-2 rounded-full bg-gray-200">
-                <div className="h-2 rounded-full bg-green-600 w-[72%]" />
-              </div>
-              <p className="text-xs text-gray-500">Crop growth: 72% complete</p>
-            </div>
-          </div>
-        </div>
       </section>
 
       {/* Features Section */}
