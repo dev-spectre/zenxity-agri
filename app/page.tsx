@@ -1,10 +1,11 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Leaf, Clock, TrendingUp, Award } from "lucide-react";
+import { Leaf, Clock, TrendingUp, Award, ArrowRight, Play } from "lucide-react";
 import { useEffect, useState } from "react";
 import { ContactForm } from "@/components/ContactForm";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -20,42 +21,63 @@ export default function Home() {
 
 
       {/* Hero Section */}
-      <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-secondary via-white to-white">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div>
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-foreground mb-6 leading-tight">
-                Turn Your Land Into Profitable Farmland
-              </h1>
-              <p className="text-lg text-muted-foreground mb-8">
-                Zenxity helps landowners transform unused agricultural land into productive farms.
-                Our team manages the entire farming process while you track progress through real-time
-                updates, photos, and reports.
-              </p>
-              <div className="flex gap-4 flex-col sm:flex-row">
-                <a href="#contact">
-                  <Button size="lg" className="w-full sm:w-auto">
-                    Get Started
-                  </Button>
-                </a>
-                <a href="#about" className="inline-block">
-                  <Button
-                    size="lg"
-                    variant="outline"
-                    className="w-full sm:w-auto"
-                  >
-                    Learn More
-                  </Button>
-                </a>
-              </div>
+      <section className="relative pt-20 md:pt-0 min-h-screen flex items-center overflow-hidden">
+        {/* Background image */}
+        <div className="absolute inset-0">
+          <img src="/hero-farm.jpg" alt="Lush green farmland" className="w-full h-full object-cover" />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/40 to-black/20" />
+        </div>
+
+        <div className="container relative z-10 py-20 md:py-32 mx-auto px-4 md:px-8">
+          <div className="max-w-2xl space-y-6 md:space-y-8">
+            <span className="inline-block px-4 py-1.5 rounded-full bg-green-600/30 text-white text-sm font-medium border border-green-500/30 backdrop-blur-sm">
+              🌾 Managed Farmland Platform
+            </span>
+
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-tight text-white drop-shadow-sm">
+              Your land can earn money
+              <span className="text-green-400 font-bold drop-shadow-md">, even while you rest.</span>
+            </h1>
+
+            <p className="text-lg md:text-xl text-gray-200 max-w-lg">
+              We find the farmers. We manage the work. You get paid every season. Simple.
+            </p>
+
+            <div className="flex flex-col sm:flex-row gap-4">
+              <Link href={isLoggedIn ? "/dashboard/land" : "/login"} className="inline-flex items-center justify-center gap-2 px-7 py-4 text-base font-semibold rounded-xl bg-green-600 text-white hover:bg-green-700 transition-colors shadow-lg shadow-green-900/20">
+                Register Your Land Free <ArrowRight size={18} />
+              </Link>
+              <Link href="#about" className="inline-flex items-center justify-center gap-2 px-7 py-4 text-base font-semibold rounded-xl border-2 border-white/30 text-white hover:bg-white/10 transition-colors backdrop-blur-sm">
+                <Play size={18} /> Watch How It Works
+              </Link>
             </div>
-            <div className="hidden md:block">
-              <div className=" rounded-2xl overflow-hidden relative text-center">
-                <Image src="/hero.jpg" alt="Agricultural Farmland" width={600} height={400} priority className="object-cover w-full" />
-                <p className="text-white font-semibold absolute left-0 right-0 text-center bottom-0 bg-gradient-to-b from-transparent to-black/70 py-2">
-                  Transparent & Reliable Farming Services
-                </p>
+
+            <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-gray-300">
+              <span>✓ Free to join</span>
+              <span>✓ No paperwork hassle</span>
+              <span>✓ Tamil support</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Floating card - desktop only */}
+        <div className="hidden lg:block absolute right-12 xl:right-24 bottom-24 w-80">
+          <div className="rounded-2xl overflow-hidden shadow-2xl border border-white/10 backdrop-blur bg-white/95">
+            <img src="/hero-farm-2.jpg" alt="Aerial view of farmland" className="w-full h-40 object-cover" />
+            <div className="p-5 space-y-3">
+              <div className="flex justify-between items-center">
+                <span className="font-semibold text-gray-900">Monthly Earnings</span>
+                <span className="text-xs px-2 py-1 rounded-full bg-green-100 text-green-800 font-medium">+24% ROI</span>
               </div>
+              <div className="text-3xl font-bold text-green-600">₹18,400</div>
+              <div className="flex gap-2 text-[10px]">
+                <span className="px-2.5 py-1 rounded-full bg-green-50 text-green-700 font-medium border border-green-100">🌾 Paddy</span>
+                <span className="px-2.5 py-1 rounded-full bg-yellow-50 text-yellow-700 font-medium border border-yellow-100">Harvest in 28 days</span>
+              </div>
+              <div className="w-full h-2 rounded-full bg-gray-200">
+                <div className="h-2 rounded-full bg-green-600 w-[72%]" />
+              </div>
+              <p className="text-xs text-gray-500">Crop growth: 72% complete</p>
             </div>
           </div>
         </div>

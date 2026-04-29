@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
 import { Button } from "@/components/ui/button";
-import { User, LogOut, ChevronDown } from "lucide-react";
+import { User, LogOut, ChevronDown, LayoutDashboard } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -48,8 +48,8 @@ export function Navbar() {
                         className="w-8 h-8 rounded-full"
                       />
                     ) : (
-                      <div className="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center">
-                        <User className="w-4 h-4 mr-2" />
+                      <div className="w-8 h-8 bg-primary text-white font-bold rounded-full flex items-center justify-center text-sm shadow-sm">
+                        {session.user.name ? session.user.name.charAt(0).toUpperCase() : "U"}
                       </div>
                     )}
                     <ChevronDown className="w-4 h-4" />
@@ -58,8 +58,14 @@ export function Navbar() {
                 <DropdownMenuContent align="end" className="w-48">
                   <DropdownMenuItem asChild>
                     <Link href="/dashboard">
-                      <User className="w-4 h-4 mr-2" />
+                      <LayoutDashboard className="w-4 h-4 mr-2" />
                       Dashboard
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href="/dashboard/profile">
+                      <User className="w-4 h-4 mr-2" />
+                      Profile
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => signOut({ callbackUrl: "/" })}>
@@ -71,11 +77,8 @@ export function Navbar() {
             </>
           ) : (
             <>
-              <Button asChild variant="ghost" className="hidden sm:inline-flex">
-                <Link href="/login">Login</Link>
-              </Button>
               <Button asChild>
-                <Link href="/login">Get Started</Link>
+                <Link href="/login">Login</Link>
               </Button>
             </>
           )}

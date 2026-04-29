@@ -5,6 +5,9 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
+
+const t = (key: string) => key;
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -27,6 +30,7 @@ import {
   Timer,
   FileText,
   Eye,
+  IndianRupee,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -81,6 +85,59 @@ export default function AdminDashboard() {
   // Update history state
   const [updateHistory, setUpdateHistory] = useState<FarmingUpdate[]>([]);
   const [expandedUpdateId, setExpandedUpdateId] = useState<string | null>(null);
+
+  // Financial breakdown state
+  // Direct project creation state
+  const [showAddProjectForm, setShowAddProjectForm] = useState(false);
+  const [projectData, setProjectData] = useState({ userId: "", landSize: "", landAddress: "", notes: "" });
+  const [projectLoading, setProjectLoading] = useState(false);
+  const [selectedProject, setSelectedProject] = useState<any>(null);
+
+  const handleAddProject = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!projectData.userId || !projectData.landAddress || !projectData.landSize) return;
+    setProjectLoading(true);
+    try {
+      const res = await fetch("/api/land-requests/create-approved", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(projectData)
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setRequests([data.farmingRequest, ...requests]);
+        setProjectData({ userId: "", landSize: "", landAddress: "", notes: "" });
+        setShowAddProjectForm(false);
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setProjectLoading(false);
+    }
+  };
+
+  const [financialData, setFinancialData] = useState({ userId: "", description: "", amount: "" });
+  const [financialLoading, setFinancialLoading] = useState(false);
+
+  const handleAddFinancial = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!financialData.userId || !financialData.description || !financialData.amount) return;
+    setFinancialLoading(true);
+    try {
+      const res = await fetch("/api/financial-records", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(financialData),
+      });
+      if (res.ok) {
+        setFinancialData({ userId: "", description: "", amount: "" });
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setFinancialLoading(false);
+    }
+  };
 
   const authHeaders = () => ({
     "Content-Type": "application/json",
@@ -169,6 +226,7 @@ export default function AdminDashboard() {
     { id: "requests", label: "Farming Requests", icon: Clipboard },
     { id: "uploads", label: "Upload Updates", icon: Upload },
     { id: "offers", label: "Offers Management", icon: Megaphone },
+    { id: "financials", label: "Financials", icon: IndianRupee },
   ];
 
   useEffect(() => {
@@ -286,27 +344,159 @@ export default function AdminDashboard() {
           {/* Requests Management */}
           {activeSection === "requests" && (
             <div className="space-y-6">
-              <h2 className="text-2xl font-bold text-foreground">Farming Requests Management</h2>
-              <div className="bg-white rounded-lg border border-border overflow-hidden">
+              <div className="flex items-center justify-between">
+                <h2 className="text-2xl font-bold text-foreground">Farming Requests Management</h2>
+                <Button onClick={() => setShowAddProjectForm(!showAddProjectForm)} className="gap-2">
+                  <Plus className="w-4 h-4" /> Direct Add Project
+                </Button>
+              </div>
+              
+              {showAddProjectForm && (
+                <div className="bg-white rounded-lg border border-border p-8 max-w-xl">
+                  <h3 className="text-lg font-bold text-foreground mb-6">Create Approved Project</h3>
+                  <form onSubmit={handleAddProject} className="space-y-4">
+                    <div>
+                      <Label className="text-foreground font-semibold mb-2">Select User</Label>
+                      <select 
+                        value={projectData.userId} 
+                        onChange={(e) => setProjectData({ ...projectData, userId: e.target.value })} 
+                        className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-black" 
+                        required
+                      >
+                        <option value="">-- Choose a User --</option>
+                        {Array.from(new Map(requests.map(r => [r.user?.id, r.user])).values())
+                          .filter(u => u && u.id)
+                          .map((u: any) => (
+                            <option key={u.id} value={u.id}>{u.name} ({u.email})</option>
+                          ))
+                        }
+                      </select>
+                    </div>
+                    <div>
+                      <Label className="text-foreground font-semibold mb-2">Land Size (Acres)</Label>
+                      <Input 
+                        type="text" 
+                        placeholder="e.g. 5" 
+                        value={projectData.landSize} 
+                        onChange={(e) => setProjectData({ ...projectData, landSize: e.target.value })} 
+                        required 
+                      />
+                    </div>
+                    <div>
+                      <Label className="text-foreground font-semibold mb-2">Location (City/Address)</Label>
+                      <Input 
+                        type="text" 
+                        placeholder="e.g., Coimbatore" 
+                        value={projectData.landAddress} 
+                        onChange={(e) => setProjectData({ ...projectData, landAddress: e.target.value })} 
+                        required 
+                      />
+                    </div>
+                    <div>
+                      <Label className="text-foreground font-semibold mb-2">Notes (Optional)</Label>
+                      <Input 
+                        type="text" 
+                        placeholder="e.g., Organic Tomato Farming" 
+                        value={projectData.notes} 
+                        onChange={(e) => setProjectData({ ...projectData, notes: e.target.value })} 
+                      />
+                    </div>
+                    <div className="flex gap-4">
+                      <Button type="submit" disabled={projectLoading}>
+                        {projectLoading ? "Creating..." : "Create Project"}
+                      </Button>
+                      <Button type="button" variant="outline" onClick={() => setShowAddProjectForm(false)}>Cancel</Button>
+                    </div>
+                  </form>
+                </div>
+              )}
+              <div className="bg-white rounded-xl border border-border overflow-hidden shadow-sm">
                 <div className="overflow-x-auto">
-                  <table className="w-full text-sm">
-                    <thead className="bg-secondary border-b border-border"><tr><th className="text-left py-4 px-6 text-foreground font-semibold">User</th><th className="text-left py-4 px-6 text-foreground font-semibold">Size</th><th className="text-left py-4 px-6 text-foreground font-semibold">City</th><th className="text-left py-4 px-6 text-foreground font-semibold">Status</th><th className="text-left py-4 px-6 text-foreground font-semibold">Action</th></tr></thead>
-                    <tbody>
+                  <table className="w-full text-sm text-left min-w-[900px] border-collapse">
+                    <thead className="bg-gray-50 border-b border-border">
+                      <tr>
+                        <th className="py-4 px-6 text-muted-foreground font-semibold">{t("User")}</th>
+                        <th className="py-4 px-6 text-muted-foreground font-semibold">{t("Size")}</th>
+                        <th className="py-4 px-6 text-muted-foreground font-semibold">{t("City")}</th>
+                        <th className="py-4 px-6 text-muted-foreground font-semibold">{t("Status & Progress")}</th>
+                        <th className="py-4 px-6 text-muted-foreground font-semibold">{t("Action")}</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-100">
                       {requests.map((req) => (
-                        <tr key={req.id} className="border-b border-border hover:bg-gray-50">
-                          <td className="py-4 px-6 text-foreground font-medium">{req.user?.name}</td>
-                          <td className="py-4 px-6 text-muted-foreground">{req.landSize}</td>
+                        <tr key={req.id} className="hover:bg-gray-50 transition-colors">
+                          <td className="py-4 px-6">
+                            <p className="text-foreground font-semibold">{req.user?.name}</p>
+                            <p className="text-xs text-muted-foreground">{req.user?.email}</p>
+                          </td>
+                          <td className="py-4 px-6 text-muted-foreground">{req.landSize} {t("Acres")}</td>
                           <td className="py-4 px-6 text-foreground">{req.landAddress}</td>
-                          <td className="py-4 px-6"><span className={`px-3 py-1 rounded-full border text-xs font-semibold ${getStatusColor(req.status)}`}>{req.status?.charAt(0).toUpperCase() + req.status?.slice(1).toLowerCase()}</span></td>
+                          <td className="py-4 px-6">
+                            <div className="flex flex-col gap-2 max-w-[140px]">
+                              <span className={`px-2.5 py-1 rounded-full border text-xs font-semibold text-center ${getStatusColor(req.status)}`}>
+                                {req.status?.charAt(0).toUpperCase() + req.status?.slice(1).toLowerCase()}
+                              </span>
+                              {(req.status === "APPROVED" || req.status?.toLowerCase() === "accepted") && (
+                                <div className="flex items-center gap-2 bg-gray-50 px-2 py-1 rounded border border-gray-200">
+                                  <input 
+                                    type="number" 
+                                    min="0" 
+                                    max="100" 
+                                    defaultValue={req.progress || 0} 
+                                    onBlur={async (e) => {
+                                      const val = parseInt(e.target.value);
+                                      if (isNaN(val)) return;
+                                      await fetch("/api/land-requests/progress", {
+                                        method: "PUT",
+                                        headers: { "Content-Type": "application/json" },
+                                        body: JSON.stringify({ reqId: req.id, progress: val })
+                                      });
+                                    }}
+                                    className="w-12 text-center font-bold py-0.5 text-sm bg-transparent border-none outline-none text-black [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                  />
+                                  <span className="text-xs text-muted-foreground font-medium">%</span>
+                                </div>
+                              )}
+                            </div>
+                          </td>
                           <td className="py-4 px-6">
                             {req.status?.toLowerCase() === "pending" ? (
                               <div className="flex gap-2">
-                                <Button size="sm" className="bg-green-600 hover:bg-green-700 text-white" onClick={() => handleRequestAction(req.id, "accept")}><CheckCircle className="w-4 h-4 mr-1" />Accept</Button>
-                                <Button size="sm" variant="destructive" onClick={() => handleRequestAction(req.id, "reject")}><XCircle className="w-4 h-4 mr-1" />Reject</Button>
+                                <Button 
+                                  size="sm" 
+                                  className="bg-green-600 hover:bg-green-700 text-white gap-1 shadow-sm" 
+                                  onClick={() => handleRequestAction(req.id, "accept")}
+                                >
+                                  <CheckCircle className="w-4 h-4" /> {t("Accept")}
+                                </Button>
+                                <Button 
+                                  size="sm" 
+                                  variant="destructive" 
+                                  className="gap-1 shadow-sm"
+                                  onClick={() => handleRequestAction(req.id, "reject")}
+                                >
+                                  <XCircle className="w-4 h-4" /> {t("Reject")}
+                                </Button>
                               </div>
                             ) : (
-                              <span className="text-muted-foreground text-xs">{req.status?.toLowerCase() === "accepted" || req.status?.toLowerCase() === "approved" ? "Accepted" : "Rejected"}</span>
+                              <div className="flex flex-col gap-2">
+                                <span className="text-muted-foreground text-xs font-medium px-2 py-1 bg-gray-100 rounded text-center">
+                                  {req.status?.toLowerCase() === "accepted" || req.status?.toLowerCase() === "approved" 
+                                    ? t("Processed") 
+                                    : t("Closed")}
+                                </span>
+                              </div>
                             )}
+                            <Button 
+                              asChild
+                              size="sm" 
+                              variant="outline" 
+                              className="mt-2 gap-1 shadow-sm border-primary/30 hover:border-primary text-primary hover:text-primary flex"
+                            >
+                              <Link href={`/admin/requests/${req.id}`}>
+                                <Eye className="w-4 h-4" /> {t("Manage")}
+                              </Link>
+                            </Button>
                           </td>
                         </tr>
                       ))}
@@ -314,6 +504,188 @@ export default function AdminDashboard() {
                   </table>
                 </div>
               </div>
+
+              {/* Grouped Project Detail Modal/Drawer */}
+              {false && (
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 overflow-y-auto">
+                  <div className="bg-white rounded-xl shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto flex flex-col border">
+                    
+                    {/* Modal Header */}
+                    <div className="p-6 border-b flex items-center justify-between bg-gray-50">
+                      <div>
+                        <h3 className="text-xl font-bold text-foreground">{t("Manage Farming Project")}</h3>
+                        <p className="text-sm text-muted-foreground">{selectedProject.landAddress}</p>
+                      </div>
+                      <Button variant="ghost" size="sm" onClick={() => setSelectedProject(null)} className="text-muted-foreground hover:text-foreground font-bold text-lg">✕</Button>
+                    </div>
+
+                    {/* Modal Body */}
+                    <div className="p-6 space-y-8 flex-1">
+                      
+                      {/* Grid Split: User Info & Project Legal Details */}
+                      <div className="grid md:grid-cols-2 gap-6">
+                        
+                        <div className="bg-gray-50 p-4 rounded-lg border border-gray-100 space-y-3">
+                          <h4 className="font-bold text-primary text-sm border-b pb-1">{t("User Information")}</h4>
+                          <div>
+                            <span className="text-xs text-muted-foreground block">{t("Full Name")}</span>
+                            <span className="font-medium text-foreground">{selectedProject.user?.name}</span>
+                          </div>
+                          <div>
+                            <span className="text-xs text-muted-foreground block">{t("Email ID")}</span>
+                            <span className="font-medium text-foreground">{selectedProject.user?.email}</span>
+                          </div>
+                          <div>
+                            <span className="text-xs text-muted-foreground block">{t("Mobile Number")}</span>
+                            <span className="font-medium text-foreground">{selectedProject.user?.mobileNumber || "None"}</span>
+                          </div>
+                          {selectedProject.user?.bankName && (
+                            <div className="mt-2 pt-2 border-t border-dashed text-xs">
+                              <p className="font-semibold text-gray-700">{t("Bank:")} {selectedProject.user.bankName}</p>
+                              <p className="text-gray-600">{t("A/C:")} {selectedProject.user.accountNumber}</p>
+                              <p className="text-gray-600">{t("IFSC:")} {selectedProject.user.ifscCode}</p>
+                            </div>
+                          )}
+                        </div>
+
+                        <div className="bg-gray-50 p-4 rounded-lg border border-gray-100 space-y-3">
+                          <h4 className="font-bold text-primary text-sm border-b pb-1">{t("Land & Legal Information")}</h4>
+                          <div className="grid grid-cols-2 gap-2">
+                            <div>
+                              <span className="text-xs text-muted-foreground block">{t("Land Size")}</span>
+                              <span className="font-medium text-foreground">{selectedProject.landSize} {t("Acres")}</span>
+                            </div>
+                            <div>
+                              <span className="text-xs text-muted-foreground block">{t("Survey No")}</span>
+                              <span className="font-medium text-foreground">{selectedProject.surveyNo || "None"}</span>
+                            </div>
+                            <div>
+                              <span className="text-xs text-muted-foreground block">{t("Patta No")}</span>
+                              <span className="font-medium text-foreground">{selectedProject.pattaNo || "None"}</span>
+                            </div>
+                            <div>
+                              <span className="text-xs text-muted-foreground block">{t("Language")}</span>
+                              <span className="font-medium text-foreground">{selectedProject.preferredLanguage}</span>
+                            </div>
+                          </div>
+                          <div className="pt-2">
+                            <span className="text-xs text-muted-foreground block">{t("Legal Details")}</span>
+                            <span className="text-sm text-foreground font-medium">{selectedProject.legalInfo || "Clear Title"}</span>
+                          </div>
+                        </div>
+
+                      </div>
+
+                      {/* Milestones & Progress Configuration */}
+                      <div className="bg-white p-4 rounded-lg border space-y-4 shadow-sm">
+                        <h4 className="font-bold text-foreground text-sm flex items-center gap-2">
+                          <Clipboard className="w-4 h-4 text-primary" /> {t("Timeline & Progress Config")}
+                        </h4>
+                        <div className="grid md:grid-cols-3 gap-4 items-end">
+                          <div className="md:col-span-2 space-y-1">
+                            <Label className="text-xs text-muted-foreground">{t("Milestone Steps (Comma-separated)")}</Label>
+                            <Input 
+                              type="text" 
+                              placeholder="e.g., Planning, Tilling, Sowing, Harvest, Completed" 
+                              defaultValue={selectedProject.milestones || "Planning, Growing, Harvest, Completed"}
+                              onBlur={async (e) => {
+                                const res = await fetch("/api/land-requests/progress", {
+                                  method: "PUT",
+                                  headers: { "Content-Type": "application/json" },
+                                  body: JSON.stringify({ reqId: selectedProject.id, milestones: e.target.value })
+                                });
+                                if (res.ok) {
+                                  toast.success(t("Milestones updated successfully"));
+                                  const updated = { ...selectedProject, milestones: e.target.value };
+                                  setSelectedProject(updated);
+                                  setRequests(requests.map(r => r.id === selectedProject.id ? updated : r));
+                                }
+                              }}
+                            />
+                          </div>
+                          <div className="space-y-1">
+                            <Label className="text-xs text-muted-foreground">{t("Overall Completion (%)")}</Label>
+                            <Input 
+                              type="number"
+                              min="0"
+                              max="100" 
+                              defaultValue={selectedProject.progress || 0}
+                              onBlur={async (e) => {
+                                const val = parseInt(e.target.value);
+                                if (isNaN(val)) return;
+                                const res = await fetch("/api/land-requests/progress", {
+                                  method: "PUT",
+                                  headers: { "Content-Type": "application/json" },
+                                  body: JSON.stringify({ reqId: selectedProject.id, progress: val })
+                                });
+                                if (res.ok) {
+                                  toast.success(t("Progress updated"));
+                                  const updated = { ...selectedProject, progress: val };
+                                  setSelectedProject(updated);
+                                  setRequests(requests.map(r => r.id === selectedProject.id ? updated : r));
+                                }
+                              }}
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Deep Grouping: Documents & Updates & Financials */}
+                      <div className="grid md:grid-cols-3 gap-6">
+
+                        {/* Documents Column */}
+                        <div className="bg-white p-4 rounded-lg border space-y-3 max-h-[300px] overflow-y-auto shadow-sm">
+                          <h4 className="font-bold text-foreground text-sm border-b pb-1">{t("Uploaded Documents")}</h4>
+                          {selectedProject.documents && selectedProject.documents.length > 0 ? (
+                            selectedProject.documents.map((doc: any) => (
+                              <a key={doc.id} href={doc.fileUrl} target="_blank" rel="noreferrer" className="flex items-center justify-between p-2 text-xs bg-gray-50 hover:bg-gray-100 border rounded transition truncate">
+                                <span className="truncate font-medium">{doc.name}</span>
+                                <FileText className="w-4 h-4 text-muted-foreground flex-shrink-0 ml-2" />
+                              </a>
+                            ))
+                          ) : (
+                            <p className="text-xs text-muted-foreground text-center py-6">{t("No documents uploaded.")}</p>
+                          )}
+                        </div>
+
+                        {/* Activity Updates Column */}
+                        <div className="bg-white p-4 rounded-lg border space-y-3 max-h-[300px] overflow-y-auto shadow-sm">
+                          <h4 className="font-bold text-foreground text-sm border-b pb-1">{t("Farming Updates")}</h4>
+                          {selectedProject.updates && selectedProject.updates.length > 0 ? (
+                            selectedProject.updates.map((up: any) => (
+                              <div key={up.id} className="p-2 bg-gray-50 border rounded space-y-1 text-xs">
+                                <p className="font-bold text-primary">{up.title}</p>
+                                {up.description && <p className="text-muted-foreground text-[11px] line-clamp-2">{up.description}</p>}
+                                <span className="text-[10px] text-gray-400 block text-right">{new Date(up.createdAt).toLocaleDateString()}</span>
+                              </div>
+                            ))
+                          ) : (
+                            <p className="text-xs text-muted-foreground text-center py-6">{t("No updates tracked.")}</p>
+                          )}
+                        </div>
+
+                        {/* Financial Breakdown Column */}
+                        <div className="bg-white p-4 rounded-lg border space-y-3 max-h-[300px] overflow-y-auto shadow-sm">
+                          <h4 className="font-bold text-foreground text-sm border-b pb-1">{t("Financial Breakdown")}</h4>
+                          {selectedProject.user?.financialRecords && selectedProject.user.financialRecords.length > 0 ? (
+                            selectedProject.user.financialRecords.map((fin: any) => (
+                              <div key={fin.id} className="flex justify-between items-center p-2 bg-gray-50 border rounded text-xs">
+                                <span className="font-medium">{fin.description}</span>
+                                <span className="font-bold text-green-700 ml-2 flex-shrink-0">₹{fin.amount}</span>
+                              </div>
+                            ))
+                          ) : (
+                            <p className="text-xs text-muted-foreground text-center py-6">{t("No financial records.")}</p>
+                          )}
+                        </div>
+
+                      </div>
+
+                    </div>
+
+                  </div>
+                </div>
+              )}
             </div>
           )}
 
@@ -452,6 +824,58 @@ export default function AdminDashboard() {
                     </div>
                   </div>
                 ))}
+              </div>
+            </div>
+          )}
+
+          {/* Financials Management */}
+          {activeSection === "financials" && (
+            <div className="space-y-6">
+              <h2 className="text-2xl font-bold text-foreground">Manage Financial Breakdown</h2>
+              <div className="bg-white rounded-lg border border-border p-8 max-w-xl">
+                <p className="text-muted-foreground mb-6">Add a new financial record for a user's earnings breakdown.</p>
+                <form onSubmit={handleAddFinancial} className="space-y-4">
+                  <div>
+                    <Label className="text-foreground font-semibold mb-2">Select User</Label>
+                    <select 
+                      value={financialData.userId} 
+                      onChange={(e) => setFinancialData({ ...financialData, userId: e.target.value })} 
+                      className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-black" 
+                      required
+                    >
+                      <option value="">-- Choose a User --</option>
+                      {Array.from(new Map(requests.map(r => [r.user?.id, r.user])).values())
+                        .filter(u => u && u.id)
+                        .map((u: any) => (
+                          <option key={u.id} value={u.id}>{u.name} ({u.email})</option>
+                        ))
+                      }
+                    </select>
+                  </div>
+                  <div>
+                    <Label className="text-foreground font-semibold mb-2 flex items-center gap-2">Description</Label>
+                    <Input 
+                      type="text" 
+                      placeholder="e.g., Organic Carrot Harvest Profit" 
+                      value={financialData.description} 
+                      onChange={(e) => setFinancialData({ ...financialData, description: e.target.value })} 
+                      required 
+                    />
+                  </div>
+                  <div>
+                    <Label className="text-foreground font-semibold mb-2 flex items-center gap-2">Amount (₹)</Label>
+                    <Input 
+                      type="number" 
+                      placeholder="e.g. 25000" 
+                      value={financialData.amount} 
+                      onChange={(e) => setFinancialData({ ...financialData, amount: e.target.value })} 
+                      required 
+                    />
+                  </div>
+                  <Button type="submit" className="w-full" disabled={financialLoading}>
+                    {financialLoading ? "Adding..." : "Add Financial Record"}
+                  </Button>
+                </form>
               </div>
             </div>
           )}

@@ -8,7 +8,22 @@ export async function GET(request: NextRequest) {
 
   try {
     const farmingRequests = await prisma.farmingRequest.findMany({
-      select: { id: true, user: true, landAddress: true, landSize: true, preferredLanguage: true, notes: true, status: true },
+      include: {
+        user: {
+          include: {
+            financialRecords: {
+              orderBy: { date: "desc" }
+            }
+          }
+        },
+        updates: {
+          orderBy: { createdAt: "desc" }
+        },
+        documents: {
+          orderBy: { createdAt: "desc" }
+        }
+      },
+      orderBy: { createdAt: "desc" }
     });
     return NextResponse.json({ farmingRequests });
   } catch (err) {
