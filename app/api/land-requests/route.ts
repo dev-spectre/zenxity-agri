@@ -19,6 +19,9 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ message: "Land request submitted successfully", request: newRequest }, { status: 201 });
   } catch (error) {
     console.error("Error submitting land request:", error);
+    if (error instanceof Error) {
+        console.error(error.message, error.stack);
+    }
     return NextResponse.json({ message: "Internal server error" }, { status: 500 });
   }
 }

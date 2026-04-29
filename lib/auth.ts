@@ -53,7 +53,18 @@ export const authConfig: NextAuthConfig = {
           credentials.email === ADMIN_EMAIL &&
           credentials.password === ADMIN_PASSWORD
         ) {
-          return { id: "admin", name: "Admin", email: ADMIN_EMAIL, role: "admin" } as any;
+          // Ensure admin user exists in DB so foreign keys (like FarmingRequest) work
+          let adminUser = await prisma.user.findUnique({ where: { email: ADMIN_EMAIL } });
+          if (!adminUser) {
+            adminUser = await prisma.user.create({
+              data: {
+                name: "Admin",
+                email: ADMIN_EMAIL,
+                isVerified: true,
+              }
+            });
+          }
+          return { id: adminUser.id, name: "Admin", email: ADMIN_EMAIL, role: "admin" } as any;
         }
         return null;
       },
