@@ -27,8 +27,7 @@ export function Navbar() {
         document.documentElement.scrollTop ||
         document.body.scrollTop;
 
-      const heroHeight = window.innerHeight;
-      setIsScrolled(scrollTop > heroHeight - 64);
+      setIsScrolled(scrollTop > 50);
     };
 
     handleScroll();
@@ -37,7 +36,7 @@ export function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [pathname]);
 
-  if (pathname.startsWith("/admin")) {
+  if (pathname.startsWith("/admin") || pathname.startsWith("/dashboard")) {
     return null;
   }
 

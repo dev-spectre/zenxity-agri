@@ -22,6 +22,7 @@ export const navigationItems = [
   { href: "/dashboard/projects", icon: ClipboardList, label: "Projects" },
   { href: "/dashboard/earnings", icon: IndianRupee, label: "Earnings" },
   { href: "/dashboard/updates", icon: Activity, label: "Live Updates" },
+  { href: "/dashboard/profile", icon: User, label: "Profile" },
   { href: "/dashboard/support", icon: Phone, label: "Support" },
 ];
 
@@ -31,12 +32,12 @@ export function SidebarNav() {
 
   return (
     <aside className="hidden md:flex w-64 flex-col bg-white border-r border-border h-full sticky top-0">
-      {/* <div className="h-16 flex items-center border-b border-border px-6">
-        <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition">
+      <div className="h-16 flex items-center border-b border-border px-6">
+        <Link href="/dashboard" className="flex items-center gap-2 hover:opacity-80 transition">
           <img src="/logo-transparent.png" alt="Zenxity" className="w-10 h-10" />
           <span className="font-bold text-primary">Zenxity</span>
         </Link>
-      </div> */}
+      </div>
 
       <nav className="flex-1 overflow-y-auto py-4">
         {navigationItems.map((item) => {

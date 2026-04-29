@@ -10,14 +10,14 @@ import { useToast } from "@/components/ui/use-toast";
 export default function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const { toast } = useToast();
-  
+
   const [formData, setFormData] = useState({ name: "", phone: "", district: "", message: "" });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleContactSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
+
     try {
       const url = "https://docs.google.com/forms/d/e/1FAIpQLSd-wb5wl3no9om4Eqva2-2Dux6fgS3YBVzVa8nF4c9SlGJq6g/formResponse";
       const formDataParams = new URLSearchParams();
@@ -39,7 +39,7 @@ export default function Home() {
         title: "Message Sent!",
         description: "We'll get back to you soon.",
       });
-      
+
       setFormData({ name: "", phone: "", district: "", message: "" });
     } catch (error) {
       toast({
@@ -185,8 +185,8 @@ export default function Home() {
                 desc: "After every harvest, money goes directly to your bank account. Track every rupee on your phone.",
               },
             ].map((s, i) => (
-              <div 
-                key={s.num} 
+              <div
+                key={s.num}
                 className="group relative rounded-3xl p-10 bg-white border border-gray-100 shadow-2xl overflow-hidden cursor-pointer hover:-translate-y-2 transition-all duration-300"
               >
                 {/* Number badge */}
@@ -197,7 +197,7 @@ export default function Home() {
                 <div className="w-20 h-20 mx-auto mb-8 rounded-2xl bg-gradient-to-br from-emerald-400 to-green-500 flex items-center justify-center shadow-xl relative z-10">
                   <s.icon size={36} className="text-white drop-shadow-lg" />
                 </div>
-                
+
                 <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center leading-tight relative z-10">
                   {s.title}
                 </h3>
@@ -254,7 +254,7 @@ export default function Home() {
 
       <section id="about" className="py-12 md:py-24 px-4 sm:px-6 lg:px-8 bg-white">
         <div className="container mx-auto px-4 md:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-16">
+          <div className="text-left max-w-3xl mb-16">
             <h2 className="text-4xl sm:text-5xl font-bold mb-6 text-foreground tracking-tight">
               About Zenxity
             </h2>
@@ -263,17 +263,17 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="space-y-8 max-w-4xl mx-auto">
-            <div className="bg-gray-50 rounded-3xl p-8 border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
-              <div className="flex items-center gap-4 mb-4">
+          <div className="mb-16">
+            <div className="flex items-center gap-4 mb-4">
 
-                <h3 className="text-2xl font-bold text-foreground">Our Mission</h3>
-              </div>
-              <p className="text-muted-foreground leading-relaxed">
-                Our mission is to help landowners make productive use of their agricultural land by providing reliable farm management and transparent updates. Zenxity aims to simplify agriculture through technology, professional expertise, and modern practices so that landowners can generate sustainable income from their land with complete visibility and trust.
-              </p>
+              <h3 className="text-4xl font-bold text-foreground">Our Mission</h3>
             </div>
+            <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
+              We use tech and expert farm management to help landowners generate sustainable, transparent income.
+            </p>
+          </div>
 
+          <div className="space-y-8 max-w-4xl">
             <div className="bg-gray-50 rounded-3xl p-8 border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
               <div className="flex items-center gap-4 mb-6">
                 <h3 className="text-2xl font-bold text-foreground">Our Services Include</h3>
@@ -319,7 +319,7 @@ export default function Home() {
               <p className="text-lg md:text-xl mb-10 max-w-2xl mx-auto text-green-50 drop-shadow">
                 Submit your land details and let our farming experts handle the rest. Sit back, relax, and watch your unused land turn into a steady source of income.
               </p>
-              <Link href={isLoggedIn ? "/dashboard/land" : "/login"} className="inline-block">
+              <Link href={isLoggedIn ? "/dashboard" : "/login"} className="inline-block">
                 <Button size="lg" className="bg-white text-green-700 hover:bg-gray-50 px-8 py-6 text-lg font-semibold rounded-xl shadow-xl transition-transform hover:-translate-y-1">
                   Get Started Now <ArrowRight className="ml-2 w-5 h-5" />
                 </Button>
@@ -378,19 +378,19 @@ export default function Home() {
                 <form className="space-y-5" onSubmit={handleContactSubmit}>
                   <div>
                     <label className="block text-sm font-medium text-foreground mb-1.5">Name</label>
-                    <input required type="text" placeholder="Your name" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-green-600/50 focus:border-green-600 text-base transition-colors" />
+                    <input required type="text" placeholder="Your name" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-green-600/50 focus:border-green-600 text-base transition-colors" />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-foreground mb-1.5">Phone Number</label>
-                    <input required type="tel" placeholder="+91" value={formData.phone} onChange={(e) => setFormData({...formData, phone: e.target.value})} className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-green-600/50 focus:border-green-600 text-base transition-colors" />
+                    <input required type="tel" placeholder="+91" value={formData.phone} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-green-600/50 focus:border-green-600 text-base transition-colors" />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-foreground mb-1.5">Your District</label>
-                    <input required type="text" placeholder="e.g. Coimbatore" value={formData.district} onChange={(e) => setFormData({...formData, district: e.target.value})} className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-green-600/50 focus:border-green-600 text-base transition-colors" />
+                    <input required type="text" placeholder="e.g. Coimbatore" value={formData.district} onChange={(e) => setFormData({ ...formData, district: e.target.value })} className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-green-600/50 focus:border-green-600 text-base transition-colors" />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-foreground mb-1.5">Message</label>
-                    <textarea required rows={4} placeholder="Tell us about your land..." value={formData.message} onChange={(e) => setFormData({...formData, message: e.target.value})} className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-green-600/50 focus:border-green-600 text-base resize-none transition-colors" />
+                    <textarea required rows={4} placeholder="Tell us about your land..." value={formData.message} onChange={(e) => setFormData({ ...formData, message: e.target.value })} className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-green-600/50 focus:border-green-600 text-base resize-none transition-colors" />
                   </div>
                   <button type="submit" disabled={isSubmitting} className="w-full py-3.5 rounded-xl bg-green-600 text-white font-semibold text-base hover:bg-green-700 transition-colors shadow-md shadow-green-600/20 disabled:opacity-70">
                     {isSubmitting ? "Sending..." : "Send Message"}
