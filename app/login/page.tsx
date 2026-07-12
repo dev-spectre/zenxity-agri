@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Mail, Lock, User, Phone } from "lucide-react";
+import { useTranslation } from "@/hooks/useTranslation";
 
 export default function UserLogin() {
   return (
@@ -21,6 +22,12 @@ export default function UserLogin() {
 function UserLoginContent() {
   const searchParams = useSearchParams();
   const error = searchParams.get("error");
+  const { t } = useTranslation();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (error === "AccessDenied") {
@@ -87,6 +94,7 @@ function UserLoginContent() {
         email,
         password,
         redirect: false,
+        callbackUrl: "/dashboard",
       });
 
       setLoading(false);
@@ -105,40 +113,40 @@ function UserLoginContent() {
   return (
     <div className="min-h-[calc(100vh-4rem)] bg-gradient-to-br from-secondary via-white to-white flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-md">
-        <div className="bg-white rounded-2xl shadow-lg p-8">
+        <div className="bg-white rounded-3xl shadow-xl shadow-gray-200/50 border border-gray-100 p-8">
           <h2 className="text-2xl font-bold text-foreground mb-2 text-center">
-            {isLogin ? "Welcome Back" : "Create Account"}
+            {mounted ? (isLogin ? t("Welcome Back") : t("Create Account")) : ""}
           </h2>
           <p className="text-muted-foreground text-center mb-8">
-            {isLogin
-              ? "Sign in to your Zenxity account"
-              : "Join Zenxity to book farming services"}
+            {mounted ? (isLogin
+              ? t("Sign in to your Zenxity account")
+              : t("Join Zenxity to book farming services")) : ""}
           </p>
 
           {isLogin ? (
             <>
               <form onSubmit={handleLogin} className="space-y-4">
                 <div>
-                  <Label htmlFor="email" className="text-foreground">Email ID</Label>
+                  <Label htmlFor="email" className="text-foreground">{mounted ? t("Email ID") : ""}</Label>
                   <div className="relative mt-2">
                     <Mail className="absolute left-3 top-3 w-5 h-5 text-muted-foreground" />
                     <Input id="email" type="email" placeholder="your@email.com" className="pl-10" value={email} onChange={(e) => setEmail(e.target.value)} required />
                   </div>
                 </div>
                 <div>
-                  <Label htmlFor="password" className="text-foreground">Password</Label>
+                  <Label htmlFor="password" className="text-foreground">{mounted ? t("Password") : ""}</Label>
                   <div className="relative mt-2">
                     <Lock className="absolute left-3 top-3 w-5 h-5 text-muted-foreground" />
                     <Input id="password" type="password" placeholder="••••••••" className="pl-10" value={password} onChange={(e) => setPassword(e.target.value)} required />
                   </div>
                 </div>
                 <Button type="submit" className="w-full mt-6" disabled={loading}>
-                  {loading ? "Signing in..." : "Sign In"}
+                  {mounted ? (loading ? t("Signing in...") : t("Sign In")) : ""}
                 </Button>
               </form>
               <div className="my-3 flex items-center justify-center gap-2">
                 <div className="mt-1 h-[1.5px] flex-grow rounded bg-[#1F1D3923]"></div>
-                <p className="text-sm w-fit text-[#1F1D39]">or</p>
+                <p className="text-sm w-fit text-[#1F1D39]">{mounted ? t("or") : ""}</p>
                 <div className="mt-1 h-[1.5px] flex-grow rounded bg-[#1F1D3923]"></div>
               </div>
               <button
@@ -152,47 +160,47 @@ function UserLoginContent() {
                   <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z" />
                   <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z" />
                 </svg>
-                <p>Continue with Google</p>
+                <p>{mounted ? t("Continue with Google") : ""}</p>
               </button>
             </>
           ) : (
             <>
               <form onSubmit={handleSignup} className="space-y-4">
                 <div>
-                  <Label htmlFor="fullName" className="text-foreground">Full Name</Label>
+                  <Label htmlFor="fullName" className="text-foreground">{mounted ? t("Full Name") : ""}</Label>
                   <div className="relative mt-2">
                     <User className="absolute left-3 top-3 w-5 h-5 text-muted-foreground" />
                     <Input id="fullName" type="text" placeholder="John Doe" className="pl-10" value={fullName} onChange={(e) => setFullName(e.target.value)} required />
                   </div>
                 </div>
                 <div>
-                  <Label htmlFor="mobile" className="text-foreground">Mobile Number</Label>
+                  <Label htmlFor="mobile" className="text-foreground">{mounted ? t("Mobile Number") : ""}</Label>
                   <div className="relative mt-2">
                     <Phone className="absolute left-3 top-3 w-5 h-5 text-muted-foreground" />
                     <Input id="mobile" type="tel" placeholder="9876543210" className="pl-10" value={mobile} onChange={(e) => setMobile(e.target.value)} required />
                   </div>
                 </div>
                 <div>
-                  <Label htmlFor="signupEmail" className="text-foreground">Email ID</Label>
+                  <Label htmlFor="signupEmail" className="text-foreground">{mounted ? t("Email ID") : ""}</Label>
                   <div className="relative mt-2">
                     <Mail className="absolute left-3 top-3 w-5 h-5 text-muted-foreground" />
                     <Input id="signupEmail" type="email" placeholder="your@email.com" className="pl-10" value={email} onChange={(e) => setEmail(e.target.value)} required />
                   </div>
                 </div>
                 <div>
-                  <Label htmlFor="signupPassword" className="text-foreground">Create Password</Label>
+                  <Label htmlFor="signupPassword" className="text-foreground">{mounted ? t("Create Password") : ""}</Label>
                   <div className="relative mt-2">
                     <Lock className="absolute left-3 top-3 w-5 h-5 text-muted-foreground" />
                     <Input id="signupPassword" type="password" placeholder="Enter a strong password" className="pl-10" value={password} onChange={(e) => setPassword(e.target.value)} required />
                   </div>
                 </div>
                 <Button type="submit" className="w-full mt-6" disabled={loading}>
-                  {loading ? "Creating Account..." : "Create Account"}
+                  {mounted ? (loading ? t("Creating Account...") : t("Create Account")) : ""}
                 </Button>
               </form>
               <div className="my-3 flex items-center justify-center gap-2">
                 <div className="mt-1 h-[1.5px] flex-grow rounded bg-[#1F1D3923]"></div>
-                <p className="text-sm w-fit text-[#1F1D39]">or</p>
+                <p className="text-sm w-fit text-[#1F1D39]">{mounted ? t("or") : ""}</p>
                 <div className="mt-1 h-[1.5px] flex-grow rounded bg-[#1F1D3923]"></div>
               </div>
               <button
@@ -206,14 +214,14 @@ function UserLoginContent() {
                   <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z" />
                   <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z" />
                 </svg>
-                <p>Continue with Google</p>
+                <p>{mounted ? t("Continue with Google") : ""}</p>
               </button>
             </>
           )}
 
           <div className="mt-6 text-center">
             <p className="text-muted-foreground text-sm">
-              {isLogin ? "Don't have an account?" : "Already have an account?"}{" "}
+              {mounted ? (isLogin ? t("Don't have an account?") : t("Already have an account?")) : ""}{" "}
               <button
                 onClick={() => {
                   setIsLogin(!isLogin);
@@ -224,7 +232,7 @@ function UserLoginContent() {
                 }}
                 className="text-primary font-semibold hover:underline"
               >
-                {isLogin ? "Sign Up" : "Sign In"}
+                {mounted ? (isLogin ? t("Sign Up") : t("Sign In")) : ""}
               </button>
             </p>
           </div>

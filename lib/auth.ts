@@ -1,10 +1,12 @@
 import NextAuth, { NextAuthConfig } from "next-auth";
 import Google from "next-auth/providers/google";
 import Credentials from "next-auth/providers/credentials";
-import prisma from "@/lib/prisma";
 import { comparePassword, ADMIN_EMAIL, ADMIN_PASSWORD } from "@/lib/auth-utils";
+import { createUserRecord, findUserByEmail, updateUserRecord } from "@/lib/auth-fallback";
 
 export const authConfig: NextAuthConfig = {
+  trustHost: true,
+  secret: process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET || "dev-secret",
   providers: [
     Google({
       clientId: process.env.GOOGLE_CLIENT_ID,
@@ -23,7 +25,7 @@ export const authConfig: NextAuthConfig = {
         const email = credentials.email.toString();
         const password = credentials.password.toString();
 
-        const user = await prisma.user.findUnique({ where: { email } });
+        const user = await findUserByEmail(email);
 
         if (!user) return null; // No user found
         if (!user.password) return null; // OAuth only account
@@ -53,7 +55,17 @@ export const authConfig: NextAuthConfig = {
           credentials.email === ADMIN_EMAIL &&
           credentials.password === ADMIN_PASSWORD
         ) {
-          return { id: "admin", name: "Admin", email: ADMIN_EMAIL, role: "admin" } as any;
+          // Ensure admin user exists in DB so foreign keys (like FarmingRequest) work
+          let adminUser = await findUserByEmail(ADMIN_EMAIL as string);
+          if (!adminUser) {
+            adminUser = await createUserRecord({
+              name: "Admin",
+              email: ADMIN_EMAIL as string,
+              isVerified: true,
+              role: "admin",
+            });
+          }
+          return { id: adminUser.id, name: "Admin", email: ADMIN_EMAIL, role: "admin" } as any;
         }
         return null;
       },
@@ -64,24 +76,22 @@ export const authConfig: NextAuthConfig = {
       if (account?.provider === "google") {
         try {
           const email = user.email!;
-          let existingUser = await prisma.user.findUnique({ where: { email } });
+          let existingUser = await findUserByEmail(email);
 
           if (existingUser) {
             if (!existingUser.googleId) {
-              await prisma.user.update({
-                where: { id: existingUser.id },
-                data: { googleId: account.providerAccountId, profilePicture: user.image },
+              await updateUserRecord(existingUser.id, {
+                googleId: account.providerAccountId,
+                profilePicture: user.image,
               });
             }
           } else {
-            existingUser = await prisma.user.create({
-              data: {
-                name: user.name || "Google User",
-                email: email,
-                googleId: account.providerAccountId,
-                profilePicture: user.image,
-                isVerified: true,
-              },
+            existingUser = await createUserRecord({
+              name: user.name || "Google User",
+              email: email,
+              googleId: account.providerAccountId,
+              profilePicture: user.image,
+              isVerified: true,
             });
           }
           return true;
@@ -96,7 +106,7 @@ export const authConfig: NextAuthConfig = {
       if (user) {
         if (account?.provider === "google") {
           const email = user.email!;
-          const existingUser = await prisma.user.findUnique({ where: { email } });
+          const existingUser = await findUserByEmail(email);
           if (existingUser) {
             token.id = existingUser.id;
           } else {

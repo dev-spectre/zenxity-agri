@@ -40,7 +40,7 @@ export default function AdminLogin() {
   return (
     <div className="min-h-[calc(100vh-4rem)] bg-gradient-to-br from-secondary via-white to-white flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-md">
-        <div className="bg-white rounded-2xl shadow-lg p-8">
+        <div className="bg-white rounded-3xl shadow-xl shadow-gray-200/50 border border-gray-100 p-8">
           <h2 className="text-2xl font-bold text-foreground mb-2 text-center">Admin Access</h2>
           <p className="text-muted-foreground text-center mb-6 text-sm">
             Secure login for authorized administrators

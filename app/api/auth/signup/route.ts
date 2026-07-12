@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import prisma from "@/lib/prisma";
 import { hashPassword, validateName, validateEmail, validatePassword, validateMobileNumber } from "@/lib/auth-utils";
+import { createUserRecord, findUserByEmail } from "@/lib/auth-fallback";
 
 export async function POST(request: NextRequest) {
   try {
@@ -15,11 +15,12 @@ export async function POST(request: NextRequest) {
     if (!pwValid.valid) return NextResponse.json({ error: pwValid.message }, { status: 400 });
     if (!validateMobileNumber(mobileNumber)) return NextResponse.json({ error: "Invalid mobile number format" }, { status: 400 });
 
-    const existingUser = await prisma.user.findUnique({ where: { email } });
+    const normalizedEmail = email.toLowerCase().trim();
+    const existingUser = await findUserByEmail(normalizedEmail);
     if (existingUser) return NextResponse.json({ error: "User with this email already exists" }, { status: 409 });
 
     const hashedPassword = await hashPassword(password);
-    const user = await prisma.user.create({ data: { name, email, password: hashedPassword, mobileNumber } });
+    const user = await createUserRecord({ name, email: normalizedEmail, password: hashedPassword, mobileNumber });
     return NextResponse.json({ message: "User created successfully", user: { id: user.id, name: user.name, email: user.email, mobileNumber: user.mobileNumber } }, { status: 201 });
   } catch (error) {
     console.error("Signup error:", error);

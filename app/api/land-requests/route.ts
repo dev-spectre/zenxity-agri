@@ -7,18 +7,30 @@ export async function POST(request: NextRequest) {
   if (!session?.user?.id) return NextResponse.json({ message: "Not authenticated" }, { status: 401 });
 
   try {
-    const { landSize, preferredLanguage, landAddress, notes } = await request.json();
+    const { landSize, preferredLanguage, landAddress, notes, surveyNo, pattaNo, legalInfo } = await request.json();
     if (!landSize || !preferredLanguage || !landAddress) {
       return NextResponse.json({ message: "Missing required fields" }, { status: 400 });
     }
 
     const newRequest = await prisma.farmingRequest.create({
-      data: { userId: session.user.id, landSize, preferredLanguage, landAddress, notes },
+      data: { 
+        userId: session.user.id, 
+        landSize, 
+        preferredLanguage, 
+        landAddress, 
+        notes,
+        surveyNo,
+        pattaNo,
+        legalInfo
+      },
     });
 
     return NextResponse.json({ message: "Land request submitted successfully", request: newRequest }, { status: 201 });
   } catch (error) {
     console.error("Error submitting land request:", error);
+    if (error instanceof Error) {
+        console.error(error.message, error.stack);
+    }
     return NextResponse.json({ message: "Internal server error" }, { status: 500 });
   }
 }
