@@ -8,47 +8,47 @@ A managed-farmland platform where landowners track their plots, project progress
 
 ### Landing Page
 
-![Landing page](screenshots/home.png)
+![Landing page](screenshots/home.jpg)
 
 ### Login
 
-![Login](screenshots/login.png)
+![Login](screenshots/login.jpg)
 
 ### Farmer Dashboard
 
 Total land, total earnings, active projects, and recent field updates.
 
-![Dashboard](screenshots/dashboard.png)
+![Dashboard](screenshots/dashboard.jpg)
 
 ### My Land
 
 Every registered plot with its development status.
 
-![My Land](screenshots/land.png)
+![My Land](screenshots/land.jpg)
 
 ### Earnings
 
 Income and expense ledger with a running balance.
 
-![Earnings](screenshots/earnings.png)
+![Earnings](screenshots/earnings.jpg)
 
 ### Live Updates
 
 Field activity timeline — plantation, irrigation, inspections, harvest.
 
-![Live Updates](screenshots/updates.png)
+![Live Updates](screenshots/updates.jpg)
 
 ### Profile
 
 Account details and saved bank information.
 
-![Profile](screenshots/profile.png)
+![Profile](screenshots/profile.jpg)
 
 ### Support
 
 Contact form for raising issues with the Zenxity team.
 
-![Support](screenshots/support.png)
+![Support](screenshots/support.jpg)
 
 ## Features
 
